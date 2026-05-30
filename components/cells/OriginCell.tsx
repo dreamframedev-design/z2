@@ -5,64 +5,52 @@ import type { CellSignal } from '@/lib/cells-data';
 export default function OriginCell({ signal }: { signal: CellSignal }) {
   return (
     <div className="max-w-3xl">
-      <p className="mb-4 font-mono text-[10px] tracking-[0.35em] text-amber-400">
-        [ ORIGIN FILE // DECLASSIFIED LAYER-0 ]
+      <p className="label-mono mb-6 text-[11px]" style={{ color: signal.accent }}>
+        {signal.index} · {signal.kicker}
       </p>
-      <h1 className="mb-6 text-4xl font-light leading-tight text-slate-100 sm:text-5xl">
-        Z2 is a guild, not a pitch deck.
+      <h1 className="display-hero text-6xl leading-[0.85] text-[var(--bone)] sm:text-8xl">
+        Z2 is a guild,
+        <br />
+        not a pitch deck.
       </h1>
 
-      <div className="space-y-6 text-lg leading-relaxed text-slate-400">
+      <div className="font-serif-italic mt-10 space-y-6 text-xl leading-relaxed text-[var(--ash)]">
         <p>
-          We started Z2 because we kept building things that didn&apos;t fit in boxes — consciousness
-          research tools, spatial audio engines, games that feel like instruments, films that feel
-          like briefings, experiments we couldn&apos;t explain at dinner parties.
+          We started Z2 because we kept building things that didn&apos;t fit in boxes —
+          consciousness research tools, spatial audio engines, games that feel like instruments,
+          films that feel like briefings, experiments we couldn&apos;t explain at dinner parties.
         </p>
         <p>
-          Two operators. One guild. Still discovering exactly what we&apos;re building — and that
+          Two builders. One guild. Still discovering exactly what we&apos;re building — and that
           uncertainty is fuel, not a flaw.
         </p>
-        <p>
-          This Terminal is the airlock. The public front door to whatever we&apos;re brave enough
-          to ship next. We don&apos;t have every answer yet. We have clearance levels, Field Orders,
-          and a hypercube that never stops turning.
-        </p>
-        <p className="text-slate-300">
-          Dream big with us. The cells will multiply.
-        </p>
+        <p className="text-[var(--bone)]">Dream big with us. The index will multiply.</p>
       </div>
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-2">
+      <div className="mt-14 grid gap-px border hairline sm:grid-cols-2">
         {[
-          { label: 'FOUNDING', value: '2025 // EPOCH-ZERO' },
-          { label: 'STATUS', value: 'EXPLORING // UNCLASSIFIED POTENTIAL' },
-          { label: 'DISCIPLINES', value: 'GAMES · SOUND · FILM · CONSCIOUSNESS · ANOMALY' },
-          { label: 'NORTH STAR', value: 'BUILD INSTRUMENTS FOR ALTERED PERCEPTION' },
+          { k: 'FOUNDED', v: '2025 · EPOCH ZERO' },
+          { k: 'STATUS', v: 'EXPLORING · UNCLASSIFIED POTENTIAL' },
+          { k: 'DISCIPLINES', v: 'GAMES · SOUND · FILM · CONSCIOUSNESS' },
+          { k: 'NORTH STAR', v: 'INSTRUMENTS FOR ALTERED PERCEPTION' },
         ].map((item) => (
-          <div key={item.label} className="border border-slate-800 bg-slate-950/50 p-5">
-            <p className="mb-2 font-mono text-[9px] tracking-widest text-slate-600">
-              {item.label}
+          <div key={item.k} className="bg-[#0a0a0b] p-6">
+            <p className="label-mono mb-3 text-[9px] text-[var(--ash-dim)]">{item.k}</p>
+            <p className="label-mono text-[11px]" style={{ color: signal.accent }}>
+              {item.v}
             </p>
-            <p className="font-mono text-xs tracking-wider text-amber-400/90">{item.value}</p>
           </div>
         ))}
       </div>
 
-      <blockquote className="mt-12 border-l-2 border-indigo-500/40 pl-6 italic text-slate-500">
-        &ldquo;We don&apos;t know exactly what Z2 becomes. That&apos;s the point. The Terminal
-        grows as we do.&rdquo;
-      </blockquote>
-
-      <div className="mt-12 flex flex-wrap gap-3">
-        <a
-          href="https://github.com/dreamframedev-design/z2"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border border-slate-700 px-5 py-3 font-mono text-[10px] tracking-widest text-slate-400 transition hover:border-amber-500/40 hover:text-amber-400"
-        >
-          [ GITHUB // Z2 ]
-        </a>
-      </div>
+      <a
+        href="https://github.com/dreamframedev-design/z2"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-12 inline-block border hairline px-6 py-3 label-mono text-[10px] text-[var(--ash)] transition hover:border-[var(--blood)] hover:text-[var(--blood)]"
+      >
+        GITHUB ↗
+      </a>
     </div>
   );
 }

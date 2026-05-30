@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Play, Square, Brain, Infinity, Activity } from 'lucide-react';
+import { Play, Square } from 'lucide-react';
 import type { CellSignal } from '@/lib/cells-data';
 import { Z2AudioEngine } from '@/lib/audio/Z2AudioEngine';
 import { useTerminalStore } from '@/lib/store/terminal-store';
 
 const PROGRAMS = [
-  { id: 'theta', label: 'Theta Descent', desc: 'Alpha → deep Theta bio-ramp', icon: Brain },
-  { id: 'carrier', label: 'Vibration Band', desc: '40Hz carrier wave / OBE prep', icon: Activity },
-  { id: 'spark', label: 'Lucid Spark', desc: 'Alpha → Gamma burst', icon: Infinity },
+  { id: 'theta', label: 'Theta Descent', desc: 'Alpha → deep Theta bio-ramp', dur: 30000 },
+  { id: 'carrier', label: 'Vibration Band', desc: '40Hz carrier wave / OBE prep', dur: 20000 },
+  { id: 'spark', label: 'Lucid Spark', desc: 'Alpha → Gamma burst', dur: 10000 },
 ] as const;
 
 export default function DreamFrameCell({ signal }: { signal: CellSignal }) {
@@ -17,7 +17,7 @@ export default function DreamFrameCell({ signal }: { signal: CellSignal }) {
   const completeFieldOrder = useTerminalStore((s) => s.completeFieldOrder);
   const audioEnabled = useTerminalStore((s) => s.audioEnabled);
 
-  const play = async (id: (typeof PROGRAMS)[number]['id']) => {
+  const play = async (id: (typeof PROGRAMS)[number]['id'], dur: number) => {
     if (!audioEnabled) return;
     if (playing === id) {
       Z2AudioEngine.getInstance().stopProgram();
@@ -28,68 +28,62 @@ export default function DreamFrameCell({ signal }: { signal: CellSignal }) {
     await Z2AudioEngine.getInstance().playProgram(id);
     setPlaying(id);
     completeFieldOrder('FO-002');
-    setTimeout(() => setPlaying(null), id === 'theta' ? 30000 : id === 'carrier' ? 20000 : 10000);
+    setTimeout(() => setPlaying((p) => (p === id ? null : p)), dur);
   };
 
   return (
     <div>
-      <div className="mb-12">
-        <h1 className="mb-4 text-4xl font-light tracking-tight text-slate-100 sm:text-5xl">
-          Consciousness Research Laboratory
-        </h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-slate-400">
-          DreamFrame is not a dream journal. It is a research environment — a systematic
-          approach to exploring altered states with scientific rigor. These aren&apos;t mockups.
-          Click play.
-        </p>
-      </div>
+      <p className="label-mono mb-6 text-[11px]" style={{ color: signal.accent }}>
+        {signal.index} · {signal.kicker}
+      </p>
+      <h1 className="display-hero text-6xl leading-[0.85] text-[var(--bone)] sm:text-8xl">
+        DreamFrame
+      </h1>
+      <p className="font-serif-italic mt-8 max-w-2xl text-xl leading-relaxed text-[var(--ash)]">
+        A research instrument for altered states — not a dream journal. Systematic, falsifiable,
+        and instrumented. These aren&apos;t mockups. Press play.
+      </p>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        {['Oneironaut', 'Projector', 'Mystic'].map((path) => (
-          <div
-            key={path}
-            className="border border-indigo-500/20 bg-indigo-950/20 p-4 text-center font-mono text-xs tracking-widest text-indigo-300"
-          >
-            {path.toUpperCase()}
+      <div className="mt-12 grid gap-px border hairline sm:grid-cols-3">
+        {['Oneironaut', 'Projector', 'Mystic'].map((p) => (
+          <div key={p} className="bg-[#0a0a0b] p-6">
+            <p className="label-mono text-[10px] text-[var(--bone)]">{p}</p>
           </div>
         ))}
       </div>
 
-      <p className="mb-6 font-mono text-[10px] tracking-[0.3em] text-indigo-400">
-        [ TONE LABORATORY // LIVE PREVIEW ]
-      </p>
+      <p className="label-mono mt-14 mb-6 text-[10px] text-[var(--ash)]">TONE LABORATORY · LIVE</p>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {PROGRAMS.map(({ id, label, desc, icon: Icon }) => (
+      <div className="grid gap-px border hairline md:grid-cols-3">
+        {PROGRAMS.map(({ id, label, desc, dur }) => (
           <button
             key={id}
             type="button"
-            onClick={() => play(id)}
+            onClick={() => play(id, dur)}
             disabled={!audioEnabled}
-            className={`group relative border p-6 text-left transition ${
-              playing === id
-                ? 'border-indigo-400 bg-indigo-950/40'
-                : 'border-slate-800 bg-slate-950/40 hover:border-indigo-500/40'
+            className={`group bg-[#0a0a0b] p-6 text-left transition ${
+              playing === id ? '' : 'hover:bg-[#120607]'
             } ${!audioEnabled ? 'opacity-40' : ''}`}
+            style={playing === id ? { background: 'rgba(255,59,31,0.08)' } : undefined}
           >
-            <div className="mb-4 flex items-center justify-between">
-              <Icon className="h-5 w-5 text-indigo-400" />
+            <div className="mb-6 flex items-center justify-between">
+              <span className="display-hero text-2xl text-[var(--bone)]">{label}</span>
               {playing === id ? (
-                <Square className="h-4 w-4 text-indigo-300" />
+                <Square className="h-4 w-4" style={{ color: signal.accent }} />
               ) : (
-                <Play className="h-4 w-4 text-slate-600 group-hover:text-indigo-400" />
+                <Play className="h-4 w-4 text-[var(--ash-dim)] group-hover:text-[var(--blood)]" />
               )}
             </div>
-            <h3 className="mb-1 font-mono text-sm tracking-wider text-slate-200">{label}</h3>
-            <p className="text-xs text-slate-500">{desc}</p>
+            <p className="font-serif-italic text-sm text-[var(--ash)]">{desc}</p>
             {playing === id && (
-              <div className="mt-4 flex h-6 items-end gap-0.5">
-                {Array.from({ length: 16 }).map((_, i) => (
+              <div className="mt-5 flex h-6 items-end gap-0.5">
+                {Array.from({ length: 18 }).map((_, i) => (
                   <div
                     key={i}
-                    className="w-1 animate-pulse rounded-sm bg-indigo-400"
+                    className="w-1 animate-pulse"
                     style={{
-                      height: `${20 + Math.sin(i) * 40 + 30}%`,
+                      height: `${20 + Math.abs(Math.sin(i)) * 70}%`,
+                      background: signal.accent,
                       animationDelay: `${i * 0.05}s`,
                     }}
                   />
@@ -101,26 +95,24 @@ export default function DreamFrameCell({ signal }: { signal: CellSignal }) {
       </div>
 
       {!audioEnabled && (
-        <p className="mt-6 font-mono text-[10px] tracking-widest text-amber-500/80">
-          [ SPATIAL MONITORING REQUIRED FOR LIVE PROGRAMS ]
+        <p className="label-mono mt-6 text-[10px] text-[var(--blood)]">
+          ENABLE SOUND TO RUN LIVE PROGRAMS
         </p>
       )}
 
-      <div className="mt-12 border border-slate-800 p-6">
-        <p className="mb-2 font-mono text-[9px] tracking-widest text-slate-500">
-          [ PROJECT BRIDGE // CLASSIFIED ]
-        </p>
-        <p className="text-sm italic text-slate-400">
-          &ldquo;Non-invasive consciousness transduction. Your thoughts, preserved at frequencies
-          the world has never recorded.&rdquo;
+      <div className="mt-14 border-l-2 pl-6" style={{ borderColor: signal.accent }}>
+        <p className="label-mono mb-3 text-[9px] text-[var(--ash-dim)]">PROJECT BRIDGE · CLASSIFIED</p>
+        <p className="font-serif-italic text-lg text-[var(--ash)]">
+          Non-invasive consciousness transduction. Your thoughts, preserved at frequencies the
+          world has never recorded.
         </p>
         <a
           href="https://dreamframe.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-block border border-indigo-500/30 px-6 py-3 font-mono text-xs tracking-widest text-indigo-300 transition hover:bg-indigo-950/40"
+          className="mt-6 inline-block bg-[var(--blood)] px-6 py-3 label-mono text-[10px] text-[var(--bone)] transition hover:bg-[var(--ember)]"
         >
-          [ ENTER LAB → ]
+          ENTER THE LAB ↗
         </a>
       </div>
     </div>

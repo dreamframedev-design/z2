@@ -1,29 +1,38 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Serif, Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
   subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Z2 Terminal // Signal Scan Active",
+  title: "Z2 — A Creative Guild",
   description:
-    "Z2 — a creative guild building games, spatial sound, film, and consciousness research tools. The Terminal is how you get clearance.",
+    "Z2 builds games, spatial sound, film, consciousness research, and experiments that refuse categories. This is the index.",
   metadataBase: new URL("https://z2.dev"),
   openGraph: {
-    title: "Z2 Terminal",
-    description: "Six cells. One guild. Breach the signal.",
+    title: "Z2",
+    description: "A creative guild. Games · Sound · Film · Consciousness · Experiments.",
     siteName: "Z2",
   },
   other: {
-    "z2-signal": "CARRIER-ACTIVE",
+    "z2-signal": "RED-ACTIVE",
   },
 };
 
@@ -35,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#020617] text-slate-200`}
+        className={`${bricolage.variable} ${instrument.variable} ${spaceMono.variable} antialiased`}
       >
         {children}
       </body>

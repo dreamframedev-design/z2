@@ -9,94 +9,101 @@ export type CellId =
 
 export interface CellSignal {
   id: CellId;
-  codename: string;
-  designation: string;
+  index: string;
+  title: string;
+  kicker: string;
   domain: string;
-  frequency: string;
-  clearance: string;
+  status: string;
   accent: string;
   accentRgb: string;
   hook: string;
   hidden?: boolean;
+  memberOnly?: boolean;
 }
 
+/**
+ * THE INDEX — Z2's disciplines, presented as editorial entries.
+ * One signal red, varied in tone. No per-discipline rainbow.
+ */
 export const CELLS: CellSignal[] = [
   {
     id: "origin",
-    codename: "SOURCE-LINE-ZERO",
-    designation: "ORIGIN-FILE",
-    domain: "The Guild Itself",
-    frequency: "Founding",
-    clearance: "L0 PUBLIC",
-    accent: "text-amber-400",
-    accentRgb: "251, 191, 36",
-    hook: "Who we are. Why the Terminal exists. Dream with us.",
+    index: "00",
+    title: "Origin",
+    kicker: "THE GUILD",
+    domain: "Who we are",
+    status: "OPEN",
+    accent: "#e10600",
+    accentRgb: "225, 6, 0",
+    hook: "Two builders. One guild. Dreaming in public.",
   },
   {
     id: "dreamframe",
-    codename: "DF-CARRIER-WAVE",
-    designation: "DF-CELL",
-    domain: "Consciousness OS",
-    frequency: "40Hz",
-    clearance: "L0 PUBLIC",
-    accent: "text-indigo-400",
-    accentRgb: "129, 140, 248",
-    hook: "Live spatial audio lab — these aren't mockups.",
+    index: "01",
+    title: "DreamFrame",
+    kicker: "CONSCIOUSNESS",
+    domain: "Research instrument",
+    status: "LIVE",
+    accent: "#ff3b1f",
+    accentRgb: "255, 59, 31",
+    hook: "A research instrument for altered states. Listen — it's real.",
   },
   {
     id: "subject",
-    codename: "SUBJECT-NULL-ZERO",
-    designation: "SUBJECT-NULL",
-    domain: "Spatial Sound Tech",
-    frequency: "Orbital",
-    clearance: "L0 PUBLIC",
-    accent: "text-emerald-400",
-    accentRgb: "52, 211, 153",
-    hook: "Patch the rack. Operate the impossible.",
+    index: "02",
+    title: "Subject",
+    kicker: "SOUND",
+    domain: "Spatial audio",
+    status: "LIVE",
+    accent: "#c81912",
+    accentRgb: "200, 25, 18",
+    hook: "We build sound that is a place, not a track.",
   },
   {
     id: "games",
-    codename: "PLAY-VECTOR-07",
-    designation: "PLAY-VECTOR",
-    domain: "Interactive Worlds",
-    frequency: "Shard",
-    clearance: "L1 ASSOCIATE",
-    accent: "text-cyan-400",
-    accentRgb: "34, 211, 238",
-    hook: "Play the slice. Not the trailer.",
+    index: "03",
+    title: "Play Vector",
+    kicker: "GAMES",
+    domain: "Interactive worlds",
+    status: "MEMBER",
+    accent: "#ff5436",
+    accentRgb: "255, 84, 54",
+    hook: "Worlds you operate, not just watch. Play the slice.",
+    memberOnly: true,
   },
   {
     id: "film",
-    codename: "BRIEFING-SLATE-03",
-    designation: "BRIEFING-SLATE",
-    domain: "Moving Image",
-    frequency: "Cinematic",
-    clearance: "L0 PUBLIC",
-    accent: "text-rose-400",
-    accentRgb: "251, 113, 133",
-    hook: "Evidence, not gallery. Briefing mode.",
+    index: "04",
+    title: "Briefing",
+    kicker: "FILM",
+    domain: "Moving image",
+    status: "OPEN",
+    accent: "#b0060b",
+    accentRgb: "176, 6, 11",
+    hook: "Evidence, not gallery. Scroll to declassify.",
   },
   {
     id: "forge",
-    codename: "FORGE-LOG-INTERNAL",
-    designation: "FORGE-LOG",
-    domain: "Process / Dev",
-    frequency: "Transmission",
-    clearance: "L2 OPERATIVE",
-    accent: "text-amber-400",
-    accentRgb: "251, 191, 36",
-    hook: "How the impossible gets made.",
+    index: "05",
+    title: "The Forge",
+    kicker: "PROCESS",
+    domain: "How it's made",
+    status: "MEMBER",
+    accent: "#e10600",
+    accentRgb: "225, 6, 0",
+    hook: "Failed experiments, celebrated. The making, unhidden.",
+    memberOnly: true,
   },
   {
     id: "anomaly",
-    codename: "Z2-ANOMALY-UNCLASSIFIED",
-    designation: "UNCLASSIFIED",
-    domain: "Random Experiments",
-    frequency: "Glitch",
-    clearance: "WITNESSED",
-    accent: "text-fuchsia-400",
-    accentRgb: "232, 121, 249",
-    hook: "Found, not listed. Rules break here.",
+    index: "??",
+    title: "Anomaly",
+    kicker: "UNCLASSIFIED",
+    domain: "It breaks the rules",
+    status: "WITNESSED",
+    accent: "#ff2d6b",
+    accentRgb: "255, 45, 107",
+    hook: "Not listed. Found. The rules end here.",
     hidden: true,
   },
 ];
@@ -104,25 +111,25 @@ export const CELLS: CellSignal[] = [
 export const FIELD_ORDERS = [
   {
     id: "FO-001",
-    title: "Anchor Installation Protocol",
-    objective: "Enable spatial monitoring and scan three signals.",
-    reward: "+120 XP · Subject patch unlock",
+    title: "Tune in",
+    objective: "Enable sound and open three entries.",
+    reward: "Access 01",
   },
   {
     id: "FO-002",
-    title: "Carrier Sequence // Part I",
-    objective: "Breach DF-CELL and initiate room tone program.",
-    reward: "+240 XP · Lore fragment",
+    title: "First signal",
+    objective: "Open DreamFrame and start a session.",
+    reward: "Fragment",
   },
   {
     id: "FO-003",
-    title: "Orbit Hold",
-    objective: "Maintain Subject orbital pan for 30 seconds.",
-    reward: "+180 XP · Clearance evidence",
+    title: "Hold the orbit",
+    objective: "Keep the Subject field open for 30 seconds.",
+    reward: "Evidence",
   },
 ];
 
 export function generateProtocolId(): string {
   const hex = Math.random().toString(16).slice(2, 6).toUpperCase();
-  return `Z2-ASSOC-${hex}`;
+  return `Z2-${hex}`;
 }

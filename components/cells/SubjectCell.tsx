@@ -52,31 +52,40 @@ export default function SubjectCell({ signal }: { signal: CellSignal }) {
 
   return (
     <div>
-      <h1 className="mb-4 text-4xl font-light text-slate-100 sm:text-5xl">Subject Null</h1>
-      <p className="mb-8 max-w-2xl text-lg text-slate-400">
+      <p className="label-mono mb-6 text-[11px]" style={{ color: signal.accent }}>
+        {signal.index} · {signal.kicker}
+      </p>
+      <h1 className="display-hero text-6xl leading-[0.85] text-[var(--bone)] sm:text-8xl">
+        Subject
+      </h1>
+      <p className="font-serif-italic mt-8 max-w-2xl text-xl text-[var(--ash)]">
         Z2 builds spatial audio infrastructure. Patch the rack. Orbit the field. Export
         disabled — you can only remember how it felt.
       </p>
 
-      <div className="border border-emerald-500/20 bg-slate-950/60 p-6">
-        <p className="mb-6 font-mono text-[10px] tracking-[0.3em] text-emerald-400">
-          [ SUBJECT RACK // PATCH-NULL-7X ]
-        </p>
+      <div className="mt-12 border hairline">
+        <div className="border-b hairline px-6 py-4">
+          <p className="label-mono text-[10px]" style={{ color: signal.accent }}>
+            SUBJECT RACK · PATCH NULL-7X
+          </p>
+        </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-5">
+        <div className="grid gap-px lg:grid-cols-2">
+          <div className="space-y-6 bg-[#0a0a0b] p-6">
             {(
               [
-                ['carrierHz', 'OSC A // CARRIER', 40, 200, 1],
-                ['beatHz', 'OSC B // BEAT', 0.5, 40, 0.5],
-                ['orbitSpeed', 'ORBIT // LFO', 0.005, 0.08, 0.001],
-                ['filterHz', 'FILTER // LP', 200, 8000, 100],
+                ['carrierHz', 'OSC A · CARRIER', 40, 200, 1],
+                ['beatHz', 'OSC B · BEAT', 0.5, 40, 0.5],
+                ['orbitSpeed', 'ORBIT · LFO', 0.005, 0.08, 0.001],
+                ['filterHz', 'FILTER · LP', 200, 8000, 100],
               ] as const
             ).map(([key, label, min, max, step]) => (
               <div key={key}>
-                <div className="mb-2 flex justify-between font-mono text-[10px] tracking-widest text-slate-500">
+                <div className="mb-2 flex justify-between label-mono text-[10px] text-[var(--ash)]">
                   <span>{label}</span>
-                  <span className="text-emerald-400">{params[key].toFixed(key === 'orbitSpeed' ? 3 : 1)}</span>
+                  <span style={{ color: signal.accent }}>
+                    {params[key].toFixed(key === 'orbitSpeed' ? 3 : 1)}
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -86,7 +95,8 @@ export default function SubjectCell({ signal }: { signal: CellSignal }) {
                   value={params[key]}
                   onChange={(e) => update(key, parseFloat(e.target.value))}
                   disabled={!audioEnabled}
-                  className="w-full accent-emerald-500"
+                  className="w-full"
+                  style={{ accentColor: signal.accent }}
                 />
               </div>
             ))}
@@ -95,48 +105,55 @@ export default function SubjectCell({ signal }: { signal: CellSignal }) {
               type="button"
               onClick={toggle}
               disabled={!audioEnabled}
-              className={`w-full py-4 font-mono text-xs tracking-[0.25em] transition ${
-                active
-                  ? 'border border-red-500/40 bg-red-950/30 text-red-300'
-                  : 'border border-emerald-500/40 bg-emerald-950/30 text-emerald-300'
-              } ${!audioEnabled ? 'opacity-40' : ''}`}
+              className={`w-full py-4 label-mono text-[11px] transition ${!audioEnabled ? 'opacity-40' : ''}`}
+              style={{
+                background: active ? 'transparent' : signal.accent,
+                border: active ? '1px solid rgba(237,232,224,0.2)' : 'none',
+                color: active ? 'var(--ash)' : 'var(--bone)',
+              }}
             >
-              {active ? '[ DISENGAGE ORBIT ]' : '[ INITIATE SPATIAL FIELD ]'}
+              {active ? 'DISENGAGE ORBIT' : 'INITIATE SPATIAL FIELD'}
             </button>
           </div>
 
-          <div className="relative flex min-h-[280px] items-center justify-center border border-slate-800 bg-[#010409]">
-            <div className="absolute inset-0 opacity-20">
+          <div className="relative flex min-h-[300px] items-center justify-center bg-[#060507]">
+            <div className="absolute inset-0 opacity-25">
               {[...Array(5)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute left-1/2 top-1/2 rounded-full border border-emerald-500/30"
+                  className="absolute left-1/2 top-1/2 rounded-full"
                   style={{
-                    width: 40 + i * 40,
-                    height: 40 + i * 40,
+                    width: 50 + i * 44,
+                    height: 50 + i * 44,
                     transform: 'translate(-50%, -50%)',
+                    border: `1px solid rgba(${signal.accentRgb}, 0.4)`,
                   }}
                 />
               ))}
             </div>
             <div
-              className="absolute h-4 w-4 rounded-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.8)] transition-transform duration-75"
+              className="absolute h-4 w-4 rounded-full transition-transform duration-75"
               style={{
+                background: signal.accent,
+                boxShadow: `0 0 24px ${signal.accent}`,
                 transform: `translate(${orbitX}px, ${orbitY}px)`,
               }}
             />
-            <div className="absolute bottom-4 font-mono text-[9px] tracking-widest text-slate-600">
+            <span className="absolute bottom-4 label-mono text-[9px] text-[var(--ash-dim)]">
               SPATIAL PAN TRACE
-            </div>
+            </span>
           </div>
         </div>
-
-        {active && (
-          <p className="mt-4 font-mono text-[10px] tracking-widest text-emerald-500/70">
-            ORBIT HOLD: {Math.min(30, Math.floor(orbitTime))}s / 30s — FIELD ORDER FO-003
-          </p>
-        )}
       </div>
+
+      {active && (
+        <p className="label-mono mt-4 text-[10px]" style={{ color: signal.accent }}>
+          ORBIT HOLD · {Math.min(30, Math.floor(orbitTime))}s / 30s
+        </p>
+      )}
+      {!audioEnabled && (
+        <p className="label-mono mt-4 text-[10px] text-[var(--blood)]">ENABLE SOUND TO PATCH</p>
+      )}
     </div>
   );
 }

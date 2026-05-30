@@ -1,59 +1,293 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { AnimatePresence } from 'framer-motion';
-import AntigravityParticles from '@/components/ui/AntigravityParticles';
-import BootSequence from '@/components/terminal/BootSequence';
-import ConsentRitual from '@/components/terminal/ConsentRitual';
-import ClearanceRitual from '@/components/terminal/ClearanceRitual';
-import SignalScanner from '@/components/terminal/SignalScanner';
-import CellBreach from '@/components/terminal/CellBreach';
-import HeaderChrome from '@/components/terminal/HeaderChrome';
+import { AnimatePresence, motion } from 'framer-motion';
+import RedField from '@/components/ui/RedField';
+import DossierPanel from '@/components/terminal/DossierPanel';
 import { useTerminalStore } from '@/lib/store/terminal-store';
 import { Z2AudioEngine } from '@/lib/audio/Z2AudioEngine';
-import type { CellSignal } from '@/lib/cells-data';
-import { FIELD_ORDERS } from '@/lib/cells-data';
+import { CELLS, type CellSignal } from '@/lib/cells-data';
 
-const TesseractSigil = dynamic(() => import('@/components/terminal/TesseractSigil'), {
+const ApertureMark = dynamic(() => import('@/components/brand/ApertureMark'), {
   ssr: false,
-  loading: () => (
-    <div className="flex h-48 w-48 items-center justify-center sm:h-64 sm:w-64">
-      <div className="h-16 w-16 animate-pulse rounded-full bg-indigo-500/20" />
-    </div>
-  ),
+  loading: () => null,
 });
+
+/* ----------------------------------------------------------- INTRO GATE */
+
+function IntroGate({
+  onEnter,
+  onEnterSound,
+  audioLevel,
+}: {
+  onEnter: () => void;
+  onEnterSound: () => void;
+  audioLevel: number;
+}) {
+  return (
+    <motion.div
+      key="intro"
+      exit={{ opacity: 0, scale: 1.04, filter: 'blur(8px)' }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[90] flex flex-col items-center justify-center px-6"
+    >
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 opacity-90">
+        <ApertureMark intensity={0.05 + audioLevel} className="h-full w-full" />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="label-mono mb-8 text-[11px] text-[var(--ash)]"
+        >
+          A CREATIVE GUILD · EST. 2025
+        </motion.p>
+
+        <motion.h1
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          animate={{ opacity: 1, letterSpacing: '-0.05em' }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="display-hero text-[24vw] text-[var(--bone)] sm:text-[18vw] lg:text-[15rem]"
+          style={{ textShadow: '0 0 80px rgba(225,6,0,0.4)' }}
+        >
+          Z2
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="font-serif-italic mt-2 max-w-md text-xl text-[var(--ash)] sm:text-2xl"
+        >
+          Games, sound, film, consciousness, and experiments that refuse categories.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="mt-12 flex flex-col items-center gap-3 sm:flex-row"
+        >
+          <button
+            type="button"
+            onClick={onEnterSound}
+            className="red-underglow group relative overflow-hidden bg-[var(--blood)] px-10 py-4 label-mono text-[12px] text-[var(--bone)] transition hover:bg-[var(--ember)]"
+          >
+            ENTER WITH SOUND
+          </button>
+          <button
+            type="button"
+            onClick={onEnter}
+            className="border hairline px-8 py-4 label-mono text-[12px] text-[var(--ash)] transition hover:border-[var(--bone)] hover:text-[var(--bone)]"
+          >
+            ENTER MUTED
+          </button>
+        </motion.div>
+        <p className="label-mono mt-6 text-[9px] text-[var(--ash-dim)]">
+          HEADPHONES RECOMMENDED
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ----------------------------------------------------------- TOP BAR */
+
+function TopBar({
+  onToggleSound,
+  audioEnabled,
+  access,
+  onRequestAccess,
+}: {
+  onToggleSound: () => void;
+  audioEnabled: boolean;
+  access: string;
+  onRequestAccess: () => void;
+}) {
+  const [clock, setClock] = useState('');
+  useEffect(() => {
+    const tick = () =>
+      setClock(
+        new Date().toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      );
+    tick();
+    const i = setInterval(tick, 1000);
+    return () => clearInterval(i);
+  }, []);
+
+  return (
+    <header className="sticky top-0 z-40 flex items-center justify-between border-b hairline bg-[#0a0a0b]/70 px-5 py-4 backdrop-blur-md sm:px-10">
+      <div className="flex items-center gap-3">
+        <span className="display-hero text-2xl text-[var(--bone)]">Z2</span>
+        <span className="label-mono hidden text-[10px] text-[var(--ash-dim)] sm:inline">
+          / THE INDEX
+        </span>
+      </div>
+
+      <div className="flex items-center gap-5">
+        <span className="label-mono hidden text-[10px] text-[var(--ash)] sm:inline">{clock}</span>
+        {access === 'L0' ? (
+          <button
+            type="button"
+            onClick={onRequestAccess}
+            className="label-mono text-[10px] text-[var(--blood)] transition hover:text-[var(--ember)]"
+          >
+            [ REQUEST ACCESS ]
+          </button>
+        ) : (
+          <span className="label-mono text-[10px] text-[var(--ash)]">
+            ACCESS · <span className="text-[var(--blood)]">{access}</span>
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={onToggleSound}
+          className="flex items-center gap-2 label-mono text-[10px] text-[var(--ash)] transition hover:text-[var(--bone)]"
+          aria-label="Toggle sound"
+        >
+          <span
+            className="inline-block h-2 w-2 rounded-full"
+            style={{ background: audioEnabled ? 'var(--blood)' : 'var(--ash-dim)' }}
+          />
+          {audioEnabled ? 'SOUND ON' : 'MUTED'}
+        </button>
+      </div>
+    </header>
+  );
+}
+
+/* ----------------------------------------------------------- INDEX ROW */
+
+function IndexRow({
+  signal,
+  onOpen,
+}: {
+  signal: CellSignal;
+  onOpen: (s: CellSignal) => void;
+}) {
+  const recordHover = useTerminalStore((s) => s.recordHover);
+  const audioEnabled = useTerminalStore((s) => s.audioEnabled);
+
+  return (
+    <button
+      type="button"
+      onMouseEnter={() => {
+        recordHover(signal.id);
+        if (audioEnabled) Z2AudioEngine.getInstance().playUiSound('hover');
+      }}
+      onClick={() => {
+        if (audioEnabled) Z2AudioEngine.getInstance().playUiSound('breach');
+        onOpen(signal);
+      }}
+      className="group relative block w-full border-b hairline py-6 text-left transition-colors sm:py-8"
+    >
+      <div className="flex items-center gap-4 sm:gap-8">
+        <span
+          className="label-mono w-10 shrink-0 text-[11px] text-[var(--ash-dim)] transition-colors group-hover:text-[var(--blood)]"
+        >
+          {signal.index}
+        </span>
+
+        <h2
+          className="display-hero flex-1 text-4xl text-[var(--bone)] transition-all duration-500 group-hover:translate-x-2 sm:text-6xl lg:text-7xl"
+          style={{ ['--hover' as string]: signal.accent }}
+        >
+          <span className="glitch-hover transition-colors group-hover:text-[var(--blood)]">
+            {signal.title}
+          </span>
+        </h2>
+
+        <div className="hidden w-64 shrink-0 text-right sm:block">
+          <span className="label-mono text-[10px] text-[var(--ash)]">{signal.kicker}</span>
+          <p className="font-serif-italic mt-1 text-sm text-[var(--ash-dim)] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            {signal.hook}
+          </p>
+        </div>
+
+        <span
+          className="label-mono ml-auto shrink-0 text-[9px] sm:ml-0"
+          style={{
+            color:
+              signal.status === 'LIVE'
+                ? signal.accent
+                : signal.status === 'WITNESSED'
+                  ? '#ff2d6b'
+                  : 'var(--ash-dim)',
+          }}
+        >
+          {signal.status}
+        </span>
+      </div>
+
+      {/* mobile hook */}
+      <p className="font-serif-italic mt-2 pl-14 text-sm text-[var(--ash-dim)] sm:hidden">
+        {signal.hook}
+      </p>
+
+      <span
+        className="pointer-events-none absolute bottom-0 left-0 h-px w-0 transition-all duration-500 group-hover:w-full"
+        style={{ background: signal.accent }}
+      />
+    </button>
+  );
+}
+
+/* ----------------------------------------------------------- MARQUEE */
+
+function Marquee({ text, reverse = false }: { text: string; reverse?: boolean }) {
+  const content = Array.from({ length: 8 }).map((_, i) => (
+    <span key={i} className="display-hero mx-6 text-5xl text-transparent sm:text-7xl" style={{ WebkitTextStroke: '1px rgba(237,232,224,0.18)' }}>
+      {text}
+    </span>
+  ));
+  return (
+    <div className="relative overflow-hidden border-y hairline py-5">
+      <div className={reverse ? 'marquee-track marquee-track-rev' : 'marquee-track'}>
+        {content}
+        {content}
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------------------------- ROOT */
 
 export default function TerminalExperience() {
   const {
     phase,
-    setPhase,
+    enter,
     enableAudio,
+    disableAudio,
     audioEnabled,
     breachCell,
     closeBreach,
     clearance,
-    protocolId,
+    requestClearance,
     triggerAnomaly,
     witnessedAnomaly,
-    fieldOrdersComplete,
-    completeFieldOrder,
   } = useTerminalStore();
 
-  const [breachSignal, setBreachSignal] = useState<CellSignal | null>(null);
-  const [showClearance, setShowClearance] = useState(false);
-  const [audioLevel, setAudioLevel] = useState(0.3);
-  const [anomalyFlash, setAnomalyFlash] = useState(false);
-  const [sigilTaps, setSigilTaps] = useState<number[]>([]);
+  const [open, setOpen] = useState<CellSignal | null>(null);
+  const [audioLevel, setAudioLevel] = useState(0.05);
+  const [flash, setFlash] = useState(false);
 
+  // audio telemetry → aperture intensity
   useEffect(() => {
     if (!audioEnabled) return;
-    const interval = setInterval(() => {
-      setAudioLevel(Z2AudioEngine.getInstance().getAverageLevel());
-    }, 50);
-    return () => clearInterval(interval);
+    const i = setInterval(() => {
+      setAudioLevel(Z2AudioEngine.getInstance().getAverageLevel() * 0.8);
+    }, 60);
+    return () => clearInterval(i);
   }, [audioEnabled]);
 
+  // cursor pan
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (audioEnabled) Z2AudioEngine.getInstance().setCursorPan(e.clientX);
@@ -62,198 +296,173 @@ export default function TerminalExperience() {
     return () => window.removeEventListener('mousemove', onMove);
   }, [audioEnabled]);
 
+  // rare anomaly discovery
   useEffect(() => {
-    if (witnessedAnomaly) return;
-    const roll = () => {
-      if (Math.random() < 0.008) {
-        setAnomalyFlash(true);
+    if (witnessedAnomaly || phase === 'boot') return;
+    const i = setInterval(() => {
+      if (Math.random() < 0.01) {
+        setFlash(true);
         triggerAnomaly();
-        Z2AudioEngine.getInstance().playUiSound('anomaly');
-        setTimeout(() => setAnomalyFlash(false), 2000);
+        if (audioEnabled) Z2AudioEngine.getInstance().playUiSound('anomaly');
+        setTimeout(() => setFlash(false), 1600);
       }
-    };
-    const interval = setInterval(roll, 5000);
-    return () => clearInterval(interval);
-  }, [witnessedAnomaly, triggerAnomaly]);
+    }, 6000);
+    return () => clearInterval(i);
+  }, [witnessedAnomaly, phase, triggerAnomaly, audioEnabled]);
 
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if ((hour === 3 && new Date().getMinutes() === 33) || sigilTaps.length >= 6) {
-      if (!witnessedAnomaly) triggerAnomaly();
-    }
-  }, [sigilTaps, witnessedAnomaly, triggerAnomaly]);
-
-  const handleBootComplete = useCallback(() => {
-    setPhase('consent');
-  }, [setPhase]);
-
-  const handleConsentAccept = useCallback(() => {
+  const enterSound = useCallback(async () => {
     enableAudio();
-    completeFieldOrder('FO-001');
-  }, [enableAudio, completeFieldOrder]);
+    await Z2AudioEngine.getInstance().init();
+    await Z2AudioEngine.getInstance().startRoomTone();
+    Z2AudioEngine.getInstance().playUiSound('unlock');
+  }, [enableAudio]);
 
-  const handleConsentDecline = useCallback(() => {
-    setPhase('terminal');
-  }, [setPhase]);
+  const toggleSound = useCallback(async () => {
+    if (audioEnabled) {
+      Z2AudioEngine.getInstance().stopRoomTone();
+      disableAudio();
+    } else {
+      enableAudio();
+      await Z2AudioEngine.getInstance().init();
+      await Z2AudioEngine.getInstance().startRoomTone();
+    }
+  }, [audioEnabled, enableAudio, disableAudio]);
 
-  const handleBreach = useCallback(
-    (signal: CellSignal) => {
-      setBreachSignal(signal);
-      breachCell(signal.id);
+  const handleOpen = useCallback(
+    (s: CellSignal) => {
+      setOpen(s);
+      breachCell(s.id);
     },
     [breachCell]
   );
 
-  const handleCloseBreach = useCallback(() => {
-    setBreachSignal(null);
+  const handleClose = useCallback(() => {
+    setOpen(null);
     closeBreach();
     Z2AudioEngine.getInstance().stopSubjectRack();
     Z2AudioEngine.getInstance().stopProgram();
   }, [closeBreach]);
 
-  const handleSigilTap = () => {
-    const now = Date.now();
-    setSigilTaps((prev) => {
-      const next = [...prev, now].slice(-6);
-      if (next.length === 6) {
-        const gaps = next.slice(1).map((t, i) => t - next[i]);
-        const fib = [300, 500, 800, 500, 300];
-        const match = gaps.every((g, i) => Math.abs(g - fib[i]) < 150);
-        if (match) triggerAnomaly();
-      }
-      return next;
-    });
-  };
+  const visibleCells = useMemo(
+    () => CELLS.filter((c) => !c.hidden || witnessedAnomaly),
+    [witnessedAnomaly]
+  );
 
   return (
     <>
-      <AntigravityParticles />
-      <div className="grain-overlay" />
-      <div className="scan-line" />
+      <RedField />
+      <div className="grain" />
+      <div className="vignette" />
 
-      {anomalyFlash && (
-        <div className="pointer-events-none fixed inset-0 z-[200] bg-fuchsia-500/10 mix-blend-difference" />
+      {flash && (
+        <div className="pointer-events-none fixed inset-0 z-[200] bg-[#ff2d6b]/10 mix-blend-screen" />
       )}
 
       <AnimatePresence>
         {phase === 'boot' && (
-          <BootSequence key="boot" onComplete={handleBootComplete} />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {phase === 'consent' && (
-          <ConsentRitual
-            key="consent"
-            onAccept={handleConsentAccept}
-            onDecline={handleConsentDecline}
+          <IntroGate
+            onEnter={enter}
+            onEnterSound={enterSound}
+            audioLevel={audioLevel}
           />
         )}
       </AnimatePresence>
 
       <AnimatePresence>
-        {showClearance && (
-          <ClearanceRitual key="clearance" onClose={() => setShowClearance(false)} />
-        )}
+        {open && <DossierPanel key={open.id} signal={open} onClose={handleClose} />}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {phase === 'breach' && breachSignal && (
-          <CellBreach key={breachSignal.id} signal={breachSignal} onClose={handleCloseBreach} />
-        )}
-      </AnimatePresence>
+      {phase !== 'boot' && (
+        <div className="relative">
+          <TopBar
+            onToggleSound={toggleSound}
+            audioEnabled={audioEnabled}
+            access={clearance}
+            onRequestAccess={requestClearance}
+          />
 
-      {(phase === 'terminal' || phase === 'breach') && (
-        <div className="relative min-h-screen px-4 py-8 sm:px-8 sm:py-12">
-          <div className="mx-auto max-w-4xl">
-            <HeaderChrome />
+          {/* HERO */}
+          <section className="relative mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-16 sm:px-10 sm:pt-24 lg:grid-cols-[1.3fr_1fr]">
+            <div className="rise">
+              <p className="label-mono mb-6 text-[11px] text-[var(--ash)]">
+                INDEX · {String(visibleCells.length).padStart(2, '0')} ENTRIES · EPOCH 01
+              </p>
+              <h1 className="display-hero text-[15vw] leading-[0.82] text-[var(--bone)] sm:text-7xl lg:text-8xl">
+                A guild
+                <br />
+                of <span className="text-[var(--blood)]">impossible</span>
+                <br />
+                projects.
+              </h1>
+              <p className="font-serif-italic mt-8 max-w-md text-lg text-[var(--ash)]">
+                Z2 is a studio shaped like a question. We build instruments for altered
+                perception — then point them at games, film, and sound. You&apos;re early. Look
+                around.
+              </p>
+            </div>
 
-            <section className="my-12 flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:justify-between">
-              <div className="flex-1 text-center sm:text-left">
-                <p className="mb-3 font-mono text-[10px] tracking-[0.35em] text-indigo-400">
-                  [ HYPERCUBE SIGIL // {audioEnabled ? 'RESONANT' : 'DORMANT'} ]
-                </p>
-                <h1 className="mb-4 text-4xl font-light leading-tight tracking-tight text-slate-100 sm:text-5xl lg:text-6xl">
-                  The guild is real.
-                  <br />
-                  <span className="text-amber-400/90">The site is alive.</span>
-                </h1>
-                <p className="max-w-md text-sm leading-relaxed text-slate-500">
-                  Games. Spatial sound. Film. Consciousness OS. Random experiments. One
-                  clearance ladder. Breach the signal.
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-3">
-                  {!protocolId && clearance === 'L0' && (
-                    <button
-                      type="button"
-                      onClick={() => setShowClearance(true)}
-                      className="relative overflow-hidden border border-amber-500/40 bg-amber-500/10 px-6 py-3 font-mono text-xs tracking-widest text-amber-300 transition hover:bg-amber-500/20"
-                    >
-                      <span className="relative z-10">[ REQUEST CLEARANCE ]</span>
-                      <span className="absolute inset-0 shimmer-beam opacity-30" />
-                    </button>
-                  )}
-                  {witnessedAnomaly && (
-                    <span className="border border-fuchsia-500/30 px-4 py-3 font-mono text-[10px] tracking-widest text-fuchsia-400">
-                      ANOMALY DETECTED
-                    </span>
-                  )}
-                </div>
+            <div className="relative hidden h-[420px] lg:block">
+              <div className="absolute inset-0">
+                <ApertureMark intensity={0.05 + audioLevel} className="h-full w-full" />
               </div>
+            </div>
+          </section>
 
-              <button
-                type="button"
-                onClick={handleSigilTap}
-                className="relative h-48 w-48 shrink-0 sm:h-64 sm:w-64"
-                aria-label="Z2 Hypercube Sigil"
-              >
-                <TesseractSigil intensity={audioEnabled ? 0.2 + audioLevel * 2 : 0.15} className="h-full w-full" />
-              </button>
-            </section>
+          <Marquee text="GAMES · SOUND · FILM · CONSCIOUSNESS · EXPERIMENTS · " />
 
-            <section className="mb-12 border border-slate-800/80 bg-slate-950/30 p-6">
-              <p className="mb-4 font-mono text-[10px] tracking-[0.3em] text-slate-500">
-                [ FIELD ORDERS // ACTIVE ]
+          {/* THE INDEX */}
+          <section className="mx-auto max-w-6xl px-5 py-16 sm:px-10 sm:py-24">
+            <div className="mb-10 flex items-end justify-between">
+              <h2 className="font-serif-italic text-3xl text-[var(--bone)] sm:text-4xl">
+                The Index
+              </h2>
+              <span className="label-mono text-[10px] text-[var(--ash-dim)]">
+                SELECT TO OPEN
+              </span>
+            </div>
+
+            <div>
+              {visibleCells.map((c) => (
+                <IndexRow key={c.id} signal={c} onOpen={handleOpen} />
+              ))}
+            </div>
+          </section>
+
+          {/* MANIFESTO */}
+          <section className="border-t hairline">
+            <div className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-10">
+              <p className="label-mono mb-8 text-[10px] text-[var(--blood)]">MANIFESTO</p>
+              <p className="font-serif-italic text-3xl leading-snug text-[var(--bone)] sm:text-5xl">
+                &ldquo;We don&apos;t know exactly what Z2 becomes. That&apos;s the point. The
+                index grows as we do.&rdquo;
               </p>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {FIELD_ORDERS.map((fo) => {
-                  const done = fieldOrdersComplete.includes(fo.id);
-                  return (
-                    <div
-                      key={fo.id}
-                      className={`border p-4 ${done ? 'border-emerald-500/30 bg-emerald-950/20' : 'border-slate-800'}`}
-                    >
-                      <p className="font-mono text-[9px] tracking-widest text-indigo-400">{fo.id}</p>
-                      <p className="mt-1 text-sm text-slate-300">{fo.title}</p>
-                      <p className="mt-2 text-[10px] text-slate-600">
-                        {done ? '[ COMPLETE ]' : fo.reward}
-                      </p>
-                    </div>
-                  );
-                })}
+              <p className="label-mono mt-10 text-[10px] text-[var(--ash)]">
+                — THE FOUNDERS
+              </p>
+            </div>
+          </section>
+
+          <Marquee text="Z2 · Z2 · Z2 · Z2 · " reverse />
+
+          {/* FOOTER */}
+          <footer className="mx-auto max-w-6xl px-5 py-16 sm:px-10">
+            <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
+              <span className="display-hero text-7xl text-[var(--bone)] sm:text-9xl">Z2</span>
+              <div className="text-left sm:text-right">
+                <a
+                  href="https://github.com/dreamframedev-design/z2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label-mono block text-[10px] text-[var(--ash)] transition hover:text-[var(--blood)]"
+                >
+                  GITHUB ↗
+                </a>
+                <p className="label-mono mt-4 text-[9px] text-[var(--ash-dim)]">
+                  © 2025 Z2 · ALL SIGNALS RESERVED
+                </p>
               </div>
-            </section>
-
-            <SignalScanner onBreach={handleBreach} />
-
-            <footer className="mt-24 border-t border-slate-800/80 pt-8 pb-12 text-center">
-              <p className="font-mono text-[9px] tracking-[0.4em] text-slate-600">
-                Z2 // GUILD PROTOCOL ZERO // EPOCH-01 // 2025
-              </p>
-              <p className="mt-2 font-mono text-[9px] tracking-widest text-slate-700">
-                [ THE TESSERACT NEVER STOPS TURNING ]
-              </p>
-              <a
-                href="https://github.com/dreamframedev-design/z2"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-block font-mono text-[9px] tracking-widest text-slate-600 transition hover:text-amber-400/80"
-              >
-                github.com/dreamframedev-design/z2
-              </a>
-            </footer>
-          </div>
+            </div>
+          </footer>
         </div>
       )}
     </>

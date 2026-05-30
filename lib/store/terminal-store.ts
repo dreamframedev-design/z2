@@ -22,7 +22,9 @@ interface TerminalState {
   anomalyGlitch: boolean;
 
   setPhase: (phase: TerminalPhase) => void;
+  enter: () => void;
   enableAudio: () => void;
+  disableAudio: () => void;
   requestClearance: () => void;
   breachCell: (id: CellId) => void;
   closeBreach: () => void;
@@ -50,7 +52,11 @@ export const useTerminalStore = create<TerminalState>()(
 
       setPhase: (phase) => set({ phase }),
 
+      enter: () => set({ phase: "terminal" }),
+
       enableAudio: () => set({ audioEnabled: true, phase: "terminal" }),
+
+      disableAudio: () => set({ audioEnabled: false }),
 
       requestClearance: () =>
         set({
