@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Z2 Terminal
 
-## Getting Started
+**The guild is real. The clearance is earned. The site is alive.**
 
-First, run the development server:
+Z2 Terminal is the audience-facing hub for [Z2](https://github.com/dreamframedev-design/z2) — a creative guild building games, spatial sound technology, interactive consciousness research tools, experimental concepts, film, and things that refuse categories.
+
+Founded by **DreamFrame** builders exploring what a studio can be when the website itself is a synthesizer.
+
+---
+
+## What this is
+
+Not a portfolio brochure. A **live breach interface** into Z2's black-site creative collective:
+
+- **Discover** — Signal Scanner: projects as transmissions, breach to enter
+- **Belong** — Clearance tiers, Protocol IDs, Field Orders, shared XP
+- **Play** — Web Audio room tone, spatial Subject rack, playable game shards, live binaural programs
+
+### Cells (project divisions)
+
+| Codename | Domain |
+|----------|--------|
+| `DF-CELL` | Consciousness OS (DreamFrame lineage) |
+| `SUBJECT-NULL` | Spatial sound technology |
+| `PLAY-VECTOR` | Interactive games |
+| `BRIEFING-SLATE` | Film & moving image |
+| `FORGE-LOG` | Process & dev transmissions |
+| `UNCLASSIFIED` | Anomaly experiments (witness-only) |
+
+---
+
+## Quick start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Complete boot sequence  
+2. Accept spatial monitoring (headphones recommended)  
+3. Breach cells from the Signal Scanner  
+4. Request clearance for Associate status  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # production build
+npm run start   # serve production
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Next.js 16** · React 19 · TypeScript  
+- **Three.js / R3F** — hypercube sigil, bloom postprocessing  
+- **Framer Motion** — breach transitions, boot sequence  
+- **Web Audio API** — custom Z2 psychoacoustic engine (room tone, Subject rack, UI synth)  
+- **Zustand** — clearance state (persisted locally)  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Roadmap (Epochs)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Epoch-01 — The Signal** ← you are here  
+- **Epoch-02 — The Forge** — CMS, DreamFrame SSO, Constellation 3D map  
+- **Epoch-03 — The Broadcast** — premiere events, film drops  
+- **Epoch-04 — The Bridge** — experiments that don't fit any cell  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Repository
+
+```
+z2/
+├── app/                    # Next.js App Router
+├── components/
+│   ├── terminal/           # Scanner, sigil, clearance, breach shell
+│   ├── cells/              # Per-division breach experiences
+│   └── ui/                 # Particles, overlays
+└── lib/
+    ├── audio/              # Z2AudioEngine
+    ├── store/              # Terminal state
+    └── cells-data.ts       # Cell registry & Field Orders
+```
+
+---
+
+## License
+
+Private — © Z2. All rights reserved.
+
+---
+
+<p align="center">
+  <code>[ Z2-SOURCE-LINE // NO CEILING PROTOCOL ACTIVE ]</code><br/>
+  <em>The tesseract never stops turning.</em>
+</p>
