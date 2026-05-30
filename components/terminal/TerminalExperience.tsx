@@ -32,7 +32,7 @@ function IntroGate({
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       className="fixed inset-0 z-[90] flex flex-col items-center justify-center px-6"
     >
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 opacity-90">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 opacity-40">
         <ApertureMark intensity={0.05 + audioLevel} className="h-full w-full" />
       </div>
 
@@ -46,15 +46,16 @@ function IntroGate({
           A CREATIVE GUILD · EST. 2025
         </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, letterSpacing: '0.3em' }}
-          animate={{ opacity: 1, letterSpacing: '-0.05em' }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="display-hero text-[24vw] text-[var(--bone)] sm:text-[18vw] lg:text-[15rem]"
-          style={{ textShadow: '0 0 80px rgba(225,6,0,0.4)' }}
-        >
-          Z2
-        </motion.h1>
+        <motion.img
+          src="/z2-logo.svg"
+          alt="Z2"
+          initial={{ opacity: 0, scale: 0.85, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          className="h-[34vw] w-auto max-w-[460px] sm:h-[26vw] lg:h-80"
+          style={{ filter: 'drop-shadow(0 0 70px rgba(225,6,0,0.55))' }}
+          draggable={false}
+        />
 
         <motion.p
           initial={{ opacity: 0 }}
@@ -125,7 +126,7 @@ function TopBar({
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between border-b hairline bg-[#0a0a0b]/70 px-5 py-4 backdrop-blur-md sm:px-10">
       <div className="flex items-center gap-3">
-        <span className="display-hero text-2xl text-[var(--bone)]">Z2</span>
+        <img src="/z2-logo.svg" alt="Z2" className="h-7 w-auto" draggable={false} />
         <span className="label-mono hidden text-[10px] text-[var(--ash-dim)] sm:inline">
           / THE INDEX
         </span>
@@ -447,7 +448,13 @@ export default function TerminalExperience() {
           {/* FOOTER */}
           <footer className="mx-auto max-w-6xl px-5 py-16 sm:px-10">
             <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
-              <span className="display-hero text-7xl text-[var(--bone)] sm:text-9xl">Z2</span>
+              <img
+                src="/z2-logo.svg"
+                alt="Z2"
+                className="h-24 w-auto sm:h-36"
+                style={{ filter: 'drop-shadow(0 0 40px rgba(225,6,0,0.4))' }}
+                draggable={false}
+              />
               <div className="text-left sm:text-right">
                 <a
                   href="https://github.com/dreamframedev-design/z2"

@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     description: "A creative guild. Games · Sound · Film · Consciousness · Experiments.",
     siteName: "Z2",
   },
+  icons: {
+    icon: "/icon.svg",
+  },
   other: {
     "z2-signal": "RED-ACTIVE",
   },
