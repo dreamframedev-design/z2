@@ -5,6 +5,7 @@ import type { CellSignal } from '@/lib/cells-data';
 import OriginCell from '@/components/cells/OriginCell';
 import DreamFrameCell from '@/components/cells/DreamFrameCell';
 import SubjectCell from '@/components/cells/SubjectCell';
+import BloomCell from '@/components/cells/BloomCell';
 import GameCell from '@/components/cells/GameCell';
 import FilmCell from '@/components/cells/FilmCell';
 import AnomalyCell from '@/components/cells/AnomalyCell';
@@ -14,6 +15,7 @@ const MAP = {
   origin: OriginCell,
   dreamframe: DreamFrameCell,
   subject: SubjectCell,
+  bloom: BloomCell,
   games: GameCell,
   film: FilmCell,
   anomaly: AnomalyCell,

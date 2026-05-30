@@ -2,6 +2,7 @@ export type CellId =
   | "origin"
   | "dreamframe"
   | "subject"
+  | "bloom"
   | "games"
   | "film"
   | "anomaly"
@@ -60,20 +61,31 @@ export const CELLS: CellSignal[] = [
     hook: "We build sound that is a place, not a track.",
   },
   {
-    id: "games",
+    id: "bloom",
     index: "03",
-    title: "Play Vector",
+    title: "Bloom",
     kicker: "GAMES",
-    domain: "Interactive worlds",
+    domain: "Reverse-TD roguelite",
+    status: "IN DEV",
+    accent: "#ff2e6c",
+    accentRgb: "255, 46, 108",
+    hook: "A spore's journey. Guide prisoners through the mycelium.",
+  },
+  {
+    id: "games",
+    index: "04",
+    title: "Play Vector",
+    kicker: "ARCADE",
+    domain: "Web playable",
     status: "MEMBER",
     accent: "#ff5436",
     accentRgb: "255, 84, 54",
-    hook: "Worlds you operate, not just watch. Play the slice.",
+    hook: "A 60-second slice. Catch the signal.",
     memberOnly: true,
   },
   {
     id: "film",
-    index: "04",
+    index: "05",
     title: "Briefing",
     kicker: "FILM",
     domain: "Moving image",
@@ -84,7 +96,7 @@ export const CELLS: CellSignal[] = [
   },
   {
     id: "forge",
-    index: "05",
+    index: "06",
     title: "The Forge",
     kicker: "PROCESS",
     domain: "How it's made",

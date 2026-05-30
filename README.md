@@ -18,14 +18,16 @@ Not a portfolio brochure. A **live breach interface** into Z2's black-site creat
 
 ### Cells (project divisions)
 
-| Codename | Domain |
-|----------|--------|
-| `DF-CELL` | Consciousness OS (DreamFrame lineage) |
-| `SUBJECT-NULL` | Spatial sound technology |
-| `PLAY-VECTOR` | Interactive games |
-| `BRIEFING-SLATE` | Film & moving image |
-| `FORGE-LOG` | Process & dev transmissions |
-| `UNCLASSIFIED` | Anomaly experiments (witness-only) |
+| Entry | Domain |
+|-------|--------|
+| `00 Origin` | The guild itself |
+| `01 DreamFrame` | Consciousness research instrument |
+| `02 Subject` | Spatial sound technology |
+| `03 Bloom` | Reverse-TD roguelite (Unity 6) — *a spore's journey* |
+| `04 Play Vector` | Web-playable arcade slice |
+| `05 Briefing` | Film & moving image |
+| `06 The Forge` | Process & dev logs |
+| `?? Anomaly` | Experiments (witness-only) |
 
 ---
 
