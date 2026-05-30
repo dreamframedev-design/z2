@@ -1,29 +1,28 @@
 @import "tailwindcss";
 
 /*
-  Z2 — MOLTEN EDITORIAL
-  Near-black canvas, bone-white type, one dominant signal red.
-  No indigo. No slate-blue. No emerald. This is Z2's own skin.
+  Z2 — quiet confidence.
+  Architectural editorial minimalism. Near-black, warm bone type,
+  red used as a whisper. Hanken Grotesk + Fraunces (italic accents only).
 */
 
 :root {
-  --void: #0a0a0b;
-  --ink: #060507;
-  --bone: #ede8e0;
-  --ash: #8a8178;
-  --ash-dim: #4d4843;
-  --blood: #e10600;
-  --ember: #ff3b1f;
-  --oxblood: #2e0606;
-  --oxblood-soft: #1a0404;
+  --void: #0b0a0a;
+  --ink: #070606;
+  --bone: #ece7e1;
+  --ash: #948d85;
+  --ash-dim: #595149;
+  --line: rgba(236, 231, 225, 0.09);
+  --line-strong: rgba(236, 231, 225, 0.16);
+  --blood: #db133b;
+  --ember: #f15a24;
 }
 
 @theme inline {
   --color-background: var(--void);
   --color-foreground: var(--bone);
-  --font-display: var(--font-bricolage);
-  --font-serif: var(--font-instrument);
-  --font-mono: var(--font-space-mono);
+  --font-sans: var(--font-hanken);
+  --font-accent: var(--font-fraunces);
 }
 
 html {
@@ -36,11 +35,13 @@ html {
 body {
   background: var(--void);
   color: var(--bone);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-hanken), system-ui, sans-serif;
+  font-weight: 400;
   overflow-x: hidden;
   width: 100%;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  letter-spacing: -0.005em;
   user-select: none;
 }
 
@@ -56,96 +57,42 @@ body {
   color: var(--bone);
 }
 
-/* ============ TYPE UTILITIES ============ */
+/* ---------------- TYPE UTILITIES (reused by cell components) ---------------- */
 
-.font-serif-italic {
-  font-family: var(--font-serif), Georgia, serif;
-  font-style: italic;
-}
-
+/* Big editorial headline — Hanken, light & tight */
 .display-hero {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  line-height: 0.82;
-  letter-spacing: -0.04em;
+  font-family: var(--font-hanken), sans-serif;
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
 }
 
-.label-mono {
-  font-family: var(--font-mono), monospace;
+/* Italic accent — Fraunces, used sparingly for emphasis & quotes */
+.font-serif-italic {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
   font-weight: 400;
-  letter-spacing: 0.22em;
+  letter-spacing: -0.01em;
+}
+
+/* Small refined label — NOT mono. Tracked uppercase Hanken. */
+.label-mono {
+  font-family: var(--font-hanken), sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-/* ============ MOTION ============ */
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+.hairline {
+  border-color: var(--line);
 }
 
-@keyframes marquee-rev {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-.marquee-track {
-  display: inline-flex;
-  white-space: nowrap;
-  will-change: transform;
-  animation: marquee 38s linear infinite;
-}
-.marquee-track-rev {
-  animation: marquee-rev 38s linear infinite;
-}
-
-@keyframes ember-drift {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(-46%, -54%) scale(1.18);
-    opacity: 0.78;
-  }
-}
-
-@keyframes flicker {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  92% {
-    opacity: 1;
-  }
-  94% {
-    opacity: 0.4;
-  }
-  96% {
-    opacity: 1;
-  }
-  97% {
-    opacity: 0.7;
-  }
-}
-
-.flicker {
-  animation: flicker 6s infinite steps(1);
-}
+/* ---------------- MOTION (subtle, intentional) ---------------- */
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
@@ -154,38 +101,52 @@ body {
 }
 
 .rise {
-  animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes wipe-in {
+@keyframes fade {
   from {
-    clip-path: inset(0 100% 0 0);
+    opacity: 0;
   }
   to {
-    clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
 }
 
-/* RGB-split glitch on hover */
-.glitch-hover {
-  position: relative;
-}
-.glitch-hover:hover {
-  text-shadow:
-    0.04em 0 0 rgba(225, 6, 0, 0.85),
-    -0.04em 0 0 rgba(120, 200, 255, 0.45);
+.fade {
+  animation: fade 1.4s ease both;
 }
 
-/* ============ TEXTURES ============ */
+/* Bloom keeps its breathing glow inside its own world */
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.55;
+  }
+  97% {
+    opacity: 1;
+  }
+}
+.flicker {
+  animation: flicker 7s infinite steps(1);
+}
+
+/* ---------------- TEXTURE (barely there) ---------------- */
 
 .grain {
   pointer-events: none;
   position: fixed;
   inset: 0;
   z-index: 60;
-  opacity: 0.05;
+  opacity: 0.035;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .vignette {
@@ -195,16 +156,7 @@ body {
   z-index: 55;
   background: radial-gradient(
     ellipse at center,
-    transparent 38%,
-    rgba(6, 5, 7, 0.55) 88%,
-    rgba(6, 5, 7, 0.9) 100%
+    transparent 55%,
+    rgba(7, 6, 6, 0.55) 100%
   );
-}
-
-.hairline {
-  border-color: rgba(237, 232, 224, 0.1);
-}
-
-.red-underglow {
-  box-shadow: 0 24px 80px -30px rgba(225, 6, 0, 0.55);
 }
