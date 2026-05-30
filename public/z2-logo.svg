@@ -22,19 +22,21 @@
         fill: url(#linear-gradient);
       }
     </style>
-    <linearGradient id="linear-gradient" x1="242.02" y1="380.45" x2="437.34" y2="380.45" gradientUnits="userSpaceOnUse">
+    <linearGradient id="linear-gradient" x1="273.6" y1="380.45" x2="433.82" y2="380.45" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#330418"/>
-      <stop offset=".99" stop-color="#0d0911"/>
+      <stop offset=".31" stop-color="#2c0416"/>
+      <stop offset=".74" stop-color="#1b0713"/>
+      <stop offset="1" stop-color="#0d0911"/>
     </linearGradient>
     <linearGradient id="linear-gradient-2" x1="31.79" y1="222.3" x2="295.88" y2="225.14" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f58980"/>
+      <stop offset="0" stop-color="#f15a24"/>
       <stop offset="1" stop-color="#db133b"/>
     </linearGradient>
     <linearGradient id="linear-gradient-3" x1="84.59" y1="320.29" x2="286.65" y2="127.97" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#af052c"/>
       <stop offset="1" stop-color="#0d0610"/>
     </linearGradient>
-    <linearGradient id="linear-gradient-4" x1="75.04" y1="382.52" x2="234.27" y2="382.52" gradientUnits="userSpaceOnUse">
+    <linearGradient id="linear-gradient-4" x1="104.92" y1="382.52" x2="216.52" y2="382.52" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#07010b"/>
       <stop offset=".99" stop-color="#2a0a16"/>
     </linearGradient>
