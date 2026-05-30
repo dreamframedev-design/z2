@@ -1,49 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 457.81 434.72">
+<svg viewBox="0 0 150 124" xmlns="http://www.w3.org/2000/svg" fill="none">
   <defs>
-    <style>
-      .cls-1 {
-        fill: url(#linear-gradient-2);
-      }
-
-      .cls-2 {
-        fill: none;
-      }
-
-      .cls-3 {
-        fill: url(#linear-gradient-4);
-      }
-
-      .cls-4 {
-        fill: url(#linear-gradient-3);
-      }
-
-      .cls-5 {
-        fill: url(#linear-gradient);
-      }
-    </style>
-    <linearGradient id="linear-gradient" x1="273.6" y1="380.45" x2="433.82" y2="380.45" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#330418"/>
-      <stop offset=".31" stop-color="#2c0416"/>
-      <stop offset=".74" stop-color="#1b0713"/>
-      <stop offset="1" stop-color="#0d0911"/>
-    </linearGradient>
-    <linearGradient id="linear-gradient-2" x1="31.79" y1="222.3" x2="295.88" y2="225.14" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f15a24"/>
-      <stop offset="1" stop-color="#db133b"/>
-    </linearGradient>
-    <linearGradient id="linear-gradient-3" x1="84.59" y1="320.29" x2="286.65" y2="127.97" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#af052c"/>
-      <stop offset="1" stop-color="#0d0610"/>
-    </linearGradient>
-    <linearGradient id="linear-gradient-4" x1="104.92" y1="382.52" x2="216.52" y2="382.52" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#07010b"/>
-      <stop offset=".99" stop-color="#2a0a16"/>
+    <linearGradient id="z2grad" x1="18" y1="14" x2="120" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff2a3c"/>
+      <stop offset="0.42" stop-color="#d2122a"/>
+      <stop offset="1" stop-color="#0c0506"/>
     </linearGradient>
   </defs>
-  <path class="cls-5" d="M437.34,345.59v74.03h-195.32l56.92-78.34c-1.2,1.84.1,4.31,2.33,4.31h136.07Z"/>
-  <path class="cls-1" d="M437.34,114.77c0,11.7-1.85,23.26-5.42,34.25-3.57,10.99-8.87,21.43-15.74,30.89l-84.14,115.81-33.02,45.44s-.03.04-.03.06l-.05.06-56.92,78.34h-7.75c-11.73,0-22.6-6.17-28.61-16.25l-2.42-4.06c-9.18-15.4-11.51-34.1-5.73-51.08.28-.81.67-1.74,1.18-2.8,9.68-20.19,59.25-82.72,59.25-82.72l101.1-139.15c5.37-7.39.09-17.75-9.04-17.75H29.79V30.42h303.28c29.81,0,57.87,4.42,77,23.55.11.11.21.21.32.31,16.72,16.46,24.63,28.66,26.95,60.49Z"/>
-  <path class="cls-4" d="M308.74,105.81l-174.09,239.62-.12.16-50.43,69.41c-2.1,2.9-5.47,4.62-9.06,4.62H29.79v-53.5c0-7.38,2.33-14.56,6.67-20.53l.12-.16L210.67,105.81h98.07Z"/>
-  <path class="cls-3" d="M234.27,419.62H75.04c3.59,0,6.96-1.72,9.06-4.62l50.43-69.41.12-.16h64.04c-.51,1.06-.9,1.99-1.18,2.8-5.78,16.98-3.45,35.68,5.73,51.08l2.42,4.06c6.01,10.08,16.88,16.25,28.61,16.25Z"/>
-  <line class="cls-2" x1="332.04" y1="295.72" x2="298.99" y2="341.22"/>
+
+  <!-- 2 (behind) -->
+  <path d="M48 46 Q48 20 78 20 Q108 20 108 48 Q108 67 58 98 H112"
+        stroke="url(#z2grad)" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- knockout halo so the Z reads as a separate plane where it crosses the 2 -->
+  <path d="M24 27 H94 L34 97 H104"
+        stroke="#0a0a0b" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Z (front) -->
+  <path d="M24 27 H94 L34 97 H104"
+        stroke="url(#z2grad)" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
