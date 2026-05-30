@@ -4,6 +4,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import RedField from '@/components/ui/RedField';
 import DossierPanel from '@/components/terminal/DossierPanel';
+import Reveal from '@/components/ui/Reveal';
+import SmoothScroll, { setScrollLocked } from '@/components/providers/SmoothScroll';
+import {
+  Marquee,
+  Capabilities,
+  Reel,
+  Dispatch,
+  Guild,
+} from '@/components/site/BrandSections';
 import { useTerminalStore } from '@/lib/store/terminal-store';
 import { Z2AudioEngine } from '@/lib/audio/Z2AudioEngine';
 import { CELLS, type CellSignal } from '@/lib/cells-data';
@@ -18,28 +27,30 @@ function Nav({
   onToggleSound: () => void;
 }) {
   return (
-    <nav className="fixed inset-x-0 top-0 z-40">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-6 sm:px-12">
+    <nav className="fixed inset-x-0 top-0 z-40 border-b hairline bg-[var(--void)]/70 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 sm:px-12">
         <a href="#top" className="flex items-center gap-3">
-          <img src="/z2-logo.svg" alt="Z2" className="h-6 w-auto" draggable={false} />
+          <img src="/z2-logo.svg" alt="Z2" className="h-7 w-auto" draggable={false} />
           <span className="label-mono hidden text-[10px] text-[var(--ash-dim)] sm:inline">
-            Creative Studio
+            Studio
           </span>
         </a>
 
-        <div className="flex items-center gap-8">
-          <a
-            href="#work"
-            className="label-mono hidden text-[10px] text-[var(--ash)] transition-colors hover:text-[var(--bone)] sm:inline"
-          >
-            Work
-          </a>
-          <a
-            href="#studio"
-            className="label-mono hidden text-[10px] text-[var(--ash)] transition-colors hover:text-[var(--bone)] sm:inline"
-          >
-            Studio
-          </a>
+        <div className="flex items-center gap-6 sm:gap-8">
+          {[
+            ['#capabilities', 'What we do'],
+            ['#work', 'Work'],
+            ['#reel', 'Reel'],
+            ['#dispatch', 'Dispatch'],
+          ].map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              className="label-mono hidden text-[10px] text-[var(--ash)] transition-colors hover:text-[var(--bone)] md:inline"
+            >
+              {label}
+            </a>
+          ))}
           <button
             type="button"
             onClick={onToggleSound}
@@ -51,6 +62,12 @@ function Nav({
             />
             Sound
           </button>
+          <a
+            href="#guild"
+            className="label-mono hidden bg-[var(--bone)] px-4 py-2 text-[10px] text-[var(--ink)] transition-colors hover:bg-[var(--blood)] hover:text-[var(--bone)] sm:inline-block"
+          >
+            Join
+          </a>
         </div>
       </div>
     </nav>
@@ -59,32 +76,64 @@ function Nav({
 
 /* ----------------------------------------------------------------- HERO */
 
-function Hero() {
+function Hero({ onFeature }: { onFeature: () => void }) {
   return (
     <header
       id="top"
-      className="mx-auto max-w-[1400px] px-6 pt-40 pb-24 sm:px-12 sm:pt-52 sm:pb-36"
+      className="relative mx-auto flex min-h-[100svh] max-w-[1400px] flex-col items-center justify-center px-6 py-28 text-center sm:px-12"
     >
-      <p className="label-mono rise text-[11px] text-[var(--ash)]" style={{ animationDelay: '0.1s' }}>
+      <img
+        src="/z2-logo.svg"
+        alt="Z2"
+        draggable={false}
+        className="rise h-[40vw] max-h-[360px] min-h-[160px] w-auto"
+        style={{
+          animationDelay: '0.05s',
+          filter: 'drop-shadow(0 30px 90px rgba(219,19,59,0.45))',
+        }}
+      />
+
+      <p
+        className="label-mono rise mt-12 text-[11px] text-[var(--ash)]"
+        style={{ animationDelay: '0.15s' }}
+      >
         Independent creative studio — Est. 2025
       </p>
 
       <h1
-        className="display-hero rise mt-8 max-w-5xl text-[clamp(2.8rem,9vw,8.5rem)] text-[var(--bone)]"
-        style={{ animationDelay: '0.2s' }}
+        className="display-hero rise mt-5 text-balance text-[clamp(3.2rem,11vw,9.5rem)] font-semibold text-[var(--bone)]"
+        style={{ animationDelay: '0.25s' }}
       >
-        An independent studio
-        <br />
-        for the <span className="font-serif-italic text-[var(--ember)]">unclassifiable</span>.
+        We build <span className="font-serif-italic text-[var(--ember)]">worlds</span>.
       </h1>
 
       <p
-        className="rise mt-12 max-w-xl text-lg leading-relaxed text-[var(--ash)] sm:text-xl"
-        style={{ animationDelay: '0.35s' }}
+        className="rise mt-8 max-w-xl text-balance text-lg leading-relaxed text-[var(--ash)] sm:text-xl"
+        style={{ animationDelay: '0.4s' }}
       >
-        Games, sound, film, and instruments for altered perception — made by a small guild for
-        people who want something genuinely new.
+        Games, sound, film, and instruments for altered perception — by a small guild, for players
+        who want something genuinely new.
       </p>
+
+      <div
+        className="rise mt-12 flex flex-col items-center gap-4 sm:flex-row"
+        style={{ animationDelay: '0.5s' }}
+      >
+        <a
+          href="#work"
+          className="bg-[var(--blood)] px-8 py-4 label-mono text-[11px] text-[var(--bone)] transition-colors hover:bg-[var(--ember)]"
+        >
+          Enter the work
+        </a>
+        <button
+          type="button"
+          onClick={onFeature}
+          className="group flex items-center gap-2 border hairline px-8 py-4 label-mono text-[11px] text-[var(--ash)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--bone)]"
+        >
+          Play Bloom
+          <span className="text-[var(--ember)] transition-transform group-hover:translate-x-1">↗</span>
+        </button>
+      </div>
     </header>
   );
 }
@@ -138,19 +187,24 @@ function WorkRow({ signal, onOpen }: { signal: CellSignal; onOpen: (s: CellSigna
 
 function Work({ cells, onOpen }: { cells: CellSignal[]; onOpen: (s: CellSignal) => void }) {
   return (
-    <section id="work" className="mx-auto max-w-[1400px] px-6 py-20 sm:px-12 sm:py-28">
-      <div className="mb-12 flex items-baseline justify-between">
-        <h2 className="label-mono text-[11px] text-[var(--ash)]">Selected Work</h2>
-        <span className="label-mono text-[10px] text-[var(--ash-dim)]">
+    <section id="work" className="mx-auto max-w-[1400px] px-6 py-24 sm:px-12 sm:py-32">
+      <Reveal className="mb-12 flex items-end justify-between">
+        <div>
+          <span className="label-mono text-[10px] text-[var(--blood)]">The Index</span>
+          <h2 className="display-2 mt-4 max-w-2xl text-[clamp(1.8rem,4vw,3rem)] text-[var(--bone)]">
+            Every project is a world. Open one.
+          </h2>
+        </div>
+        <span className="label-mono hidden text-[10px] text-[var(--ash-dim)] sm:block">
           {String(cells.length).padStart(2, '0')} entries
         </span>
-      </div>
+      </Reveal>
 
-      <div>
+      <Reveal>
         {cells.map((c) => (
           <WorkRow key={c.id} signal={c} onOpen={onOpen} />
         ))}
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -161,11 +215,15 @@ function Studio() {
   return (
     <section id="studio" className="border-t hairline">
       <div className="mx-auto max-w-[1400px] px-6 py-28 sm:px-12 sm:py-44">
-        <p className="font-serif-italic max-w-4xl text-[clamp(1.8rem,4.5vw,3.75rem)] leading-[1.15] text-[var(--bone)]">
-          We don&apos;t know exactly what Z2 becomes. That&apos;s the point — we build at the edge
-          of what we can name, and let the work decide.
-        </p>
-        <p className="label-mono mt-12 text-[10px] text-[var(--ash)]">— The founders</p>
+        <Reveal>
+          <span className="label-mono text-[10px] text-[var(--blood)]">The Studio</span>
+          <p className="display-2 mt-8 max-w-4xl text-[clamp(1.8rem,4.5vw,3.75rem)] leading-[1.12] text-[var(--bone)]">
+            We don&apos;t know exactly what Z2 becomes. That&apos;s the point — we build at the
+            edge of what we can name, and let{' '}
+            <span className="font-serif-italic text-[var(--ember)]">the work</span> decide.
+          </p>
+          <p className="label-mono mt-12 text-[10px] text-[var(--ash)]">— The founders</p>
+        </Reveal>
       </div>
     </section>
   );
@@ -174,56 +232,108 @@ function Studio() {
 /* ----------------------------------------------------------------- FOOTER */
 
 function Footer() {
+  const links: [string, string][] = [
+    ['What we do', '#capabilities'],
+    ['Work', '#work'],
+    ['Reel', '#reel'],
+    ['Dispatch', '#dispatch'],
+    ['Join the guild', '#guild'],
+  ];
+  const social: [string, string][] = [
+    ['GitHub', 'https://github.com/dreamframedev-design/z2'],
+    ['Email', 'mailto:hello@z2.studio'],
+    ['Discord', '#guild'],
+    ['YouTube', '#reel'],
+  ];
+
   return (
-    <footer id="connect" className="border-t hairline">
-      <div className="mx-auto max-w-[1400px] px-6 py-20 sm:px-12">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-[1.5fr_1fr_1fr]">
-          <div>
-            <img src="/z2-logo.svg" alt="Z2" className="h-8 w-auto" draggable={false} />
+    <footer id="connect" className="relative border-t hairline">
+      <div className="mx-auto max-w-[1400px] px-6 pt-24 sm:px-12 sm:pt-32">
+        {/* call to action band */}
+        <div className="flex flex-col gap-8 border-b hairline pb-16 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="display-hero max-w-3xl text-[clamp(2rem,6vw,4.5rem)] text-[var(--bone)]">
+            Let&apos;s build something
+            <br />
+            <span className="text-[var(--ember)]">unclassifiable</span>.
+          </h2>
+          <a
+            href="mailto:hello@z2.studio"
+            className="label-mono group flex shrink-0 items-center gap-3 border hairline px-7 py-4 text-[11px] text-[var(--bone)] transition-colors hover:border-[var(--line-strong)]"
+          >
+            hello@z2.studio
+            <span className="text-[var(--ember)] transition-transform group-hover:translate-x-1">
+              ↗
+            </span>
+          </a>
+        </div>
+
+        {/* columns */}
+        <div className="grid grid-cols-2 gap-10 py-16 sm:grid-cols-4">
+          <div className="col-span-2 sm:col-span-1">
+            <img src="/z2-logo.svg" alt="Z2" className="h-10 w-auto" draggable={false} />
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-[var(--ash)]">
-              An independent creative studio working across games, sound, film, and consciousness.
+              Independent studio. Games, sound, film, and instruments for altered perception.
             </p>
           </div>
 
           <div>
-            <p className="label-mono mb-5 text-[10px] text-[var(--ash-dim)]">Disciplines</p>
-            <ul className="space-y-3 text-sm text-[var(--ash)]">
-              <li>Games</li>
-              <li>Spatial Sound</li>
-              <li>Film</li>
-              <li>Consciousness</li>
+            <p className="label-mono mb-5 text-[10px] text-[var(--ash-dim)]">Explore</p>
+            <ul className="space-y-3 text-sm">
+              {links.map(([label, href]) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    className="text-[var(--ash)] transition-colors hover:text-[var(--bone)]"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <p className="label-mono mb-5 text-[10px] text-[var(--ash-dim)]">Connect</p>
             <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="https://github.com/dreamframedev-design/z2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[var(--ash)] transition-colors hover:text-[var(--bone)]"
-                >
-                  GitHub
-                </a>
+              {social.map(([label, href]) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="text-[var(--ash)] transition-colors hover:text-[var(--bone)]"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="label-mono mb-5 text-[10px] text-[var(--ash-dim)]">Status</p>
+            <ul className="space-y-3 text-sm text-[var(--ash)]">
+              <li className="flex items-center gap-2">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--blood)]" />
+                Bloom — in dev
               </li>
-              <li>
-                <a
-                  href="mailto:hello@z2.studio"
-                  className="text-[var(--ash)] transition-colors hover:text-[var(--bone)]"
-                >
-                  hello@z2.studio
-                </a>
-              </li>
+              <li className="mono text-[var(--ash-dim)]">Est. 2025</li>
+              <li className="mono text-[var(--ash-dim)]">Built in the dark</li>
             </ul>
           </div>
         </div>
+      </div>
 
-        <div className="mt-20 flex flex-col gap-4 border-t hairline pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label-mono text-[10px] text-[var(--ash-dim)]">© 2025 Z2</p>
-          <p className="label-mono text-[10px] text-[var(--ash-dim)]">Built in the dark</p>
-        </div>
+      {/* giant wordmark */}
+      <div className="overflow-hidden border-t hairline">
+        <p className="display-hero select-none whitespace-nowrap px-6 py-8 text-center text-[clamp(5rem,26vw,22rem)] leading-none text-[var(--bone)] opacity-[0.04] sm:px-12">
+          Z2 STUDIO
+        </p>
+      </div>
+
+      <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-12">
+        <p className="label-mono text-[10px] text-[var(--ash-dim)]">© 2025 Z2 — All worlds reserved</p>
+        <p className="label-mono text-[10px] text-[var(--ash-dim)]">Made by a small guild</p>
       </div>
     </footer>
   );
@@ -290,11 +400,22 @@ export default function TerminalExperience() {
     [witnessedAnomaly]
   );
 
+  const featureBloom = useCallback(() => {
+    const bloom =
+      CELLS.find((c) => c.title.toLowerCase().includes('bloom')) ??
+      CELLS.find((c) => c.id.toLowerCase().includes('bloom'));
+    if (bloom) handleOpen(bloom);
+  }, [handleOpen]);
+
+  // lock the page scroll while a fullscreen dossier is open
+  useEffect(() => {
+    setScrollLocked(!!open);
+  }, [open]);
+
   return (
-    <>
+    <SmoothScroll>
       <RedField />
       <div className="grain" />
-      <div className="vignette" />
 
       <Nav audioEnabled={audioEnabled} onToggleSound={toggleSound} />
 
@@ -303,11 +424,16 @@ export default function TerminalExperience() {
       </AnimatePresence>
 
       <main className="fade relative">
-        <Hero />
+        <Hero onFeature={featureBloom} />
+        <Marquee />
+        <Capabilities />
         <Work cells={cells} onOpen={handleOpen} />
+        <Reel />
+        <Dispatch />
         <Studio />
+        <Guild />
         <Footer />
       </main>
-    </>
+    </SmoothScroll>
   );
 }

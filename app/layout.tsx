@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, Fraunces } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const hanken = Hanken_Grotesk({
-  variable: "--font-hanken",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Z2 — Independent Creative Studio",
+  title: "Z2 — We Build Worlds",
   description:
-    "Z2 is an independent creative studio. Games, sound, film, and instruments for altered perception.",
+    "Z2 is an independent studio building games, sound, film, and instruments for altered perception. Made by a small guild for people who want something genuinely new.",
   metadataBase: new URL("https://z2.dev"),
   openGraph: {
-    title: "Z2",
-    description: "An independent creative studio. Games · Sound · Film.",
+    title: "Z2 — We Build Worlds",
+    description: "Independent studio. Games · Sound · Film · Tools.",
     siteName: "Z2",
   },
   icons: {
@@ -35,7 +36,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${hanken.variable} ${fraunces.variable} antialiased`}>
+      <body
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
+      >
         {children}
       </body>
     </html>
