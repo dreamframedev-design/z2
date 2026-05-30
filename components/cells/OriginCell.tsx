@@ -19,6 +19,10 @@ export default function OriginCell({ signal }: { signal: CellSignal }) {
           like briefings, experiments we couldn&apos;t explain at dinner parties.
         </p>
         <p>
+          Two operators. One guild. Still discovering exactly what we&apos;re building — and that
+          uncertainty is fuel, not a flaw.
+        </p>
+        <p>
           This Terminal is the airlock. The public front door to whatever we&apos;re brave enough
           to ship next. We don&apos;t have every answer yet. We have clearance levels, Field Orders,
           and a hypercube that never stops turning.
