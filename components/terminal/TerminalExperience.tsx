@@ -5,11 +5,16 @@ import { AnimatePresence } from 'framer-motion';
 import RedField from '@/components/ui/RedField';
 import DossierPanel from '@/components/terminal/DossierPanel';
 import Reveal from '@/components/ui/Reveal';
+import Hero from '@/components/hero/Hero';
+import ScrollProgress from '@/components/ui/ScrollProgress';
+import SignalDivider from '@/components/ui/SignalDivider';
+import SignalBoard from '@/components/site/SignalBoard';
+import { GuildProvider, useGuild } from '@/components/providers/GuildProvider';
 import SmoothScroll, { setScrollLocked } from '@/components/providers/SmoothScroll';
 import {
-  Marquee,
   Capabilities,
   Reel,
+  FeaturedFilm,
   Dispatch,
   Guild,
 } from '@/components/site/BrandSections';
@@ -26,6 +31,7 @@ function Nav({
   audioEnabled: boolean;
   onToggleSound: () => void;
 }) {
+  const { operators } = useGuild();
   return (
     <nav className="fixed inset-x-0 top-0 z-40 border-b hairline bg-[var(--void)]/70 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 sm:px-12">
@@ -41,6 +47,8 @@ function Nav({
             ['#capabilities', 'What we do'],
             ['#work', 'Work'],
             ['#reel', 'Reel'],
+            ['#exos', 'Film'],
+            ['#signal', 'Signal'],
             ['#dispatch', 'Dispatch'],
           ].map(([href, label]) => (
             <a
@@ -51,6 +59,17 @@ function Nav({
               {label}
             </a>
           ))}
+          <a
+            href="#signal"
+            title="Operators in the guild right now"
+            className="label-mono hidden items-center gap-2 text-[10px] text-[var(--ash)] transition-colors hover:text-[var(--bone)] sm:flex"
+          >
+            <span
+              className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--blood)]"
+              style={{ boxShadow: '0 0 8px var(--glow)' }}
+            />
+            {operators} online
+          </a>
           <button
             type="button"
             onClick={onToggleSound}
@@ -71,70 +90,6 @@ function Nav({
         </div>
       </div>
     </nav>
-  );
-}
-
-/* ----------------------------------------------------------------- HERO */
-
-function Hero({ onFeature }: { onFeature: () => void }) {
-  return (
-    <header
-      id="top"
-      className="relative mx-auto flex min-h-[100svh] max-w-[1400px] flex-col items-center justify-center px-6 py-28 text-center sm:px-12"
-    >
-      <img
-        src="/z2-logo.svg"
-        alt="Z2"
-        draggable={false}
-        className="rise h-[40vw] max-h-[360px] min-h-[160px] w-auto"
-        style={{
-          animationDelay: '0.05s',
-          filter: 'drop-shadow(0 30px 90px rgba(219,19,59,0.45))',
-        }}
-      />
-
-      <p
-        className="label-mono rise mt-12 text-[11px] text-[var(--ash)]"
-        style={{ animationDelay: '0.15s' }}
-      >
-        Independent creative studio — Est. 2025
-      </p>
-
-      <h1
-        className="display-hero rise mt-5 text-balance text-[clamp(3.2rem,11vw,9.5rem)] font-semibold text-[var(--bone)]"
-        style={{ animationDelay: '0.25s' }}
-      >
-        We build <span className="font-serif-italic text-[var(--ember)]">worlds</span>.
-      </h1>
-
-      <p
-        className="rise mt-8 max-w-xl text-balance text-lg leading-relaxed text-[var(--ash)] sm:text-xl"
-        style={{ animationDelay: '0.4s' }}
-      >
-        Games, sound, film, and instruments for altered perception — by a small guild, for players
-        who want something genuinely new.
-      </p>
-
-      <div
-        className="rise mt-12 flex flex-col items-center gap-4 sm:flex-row"
-        style={{ animationDelay: '0.5s' }}
-      >
-        <a
-          href="#work"
-          className="bg-[var(--blood)] px-8 py-4 label-mono text-[11px] text-[var(--bone)] transition-colors hover:bg-[var(--ember)]"
-        >
-          Enter the work
-        </a>
-        <button
-          type="button"
-          onClick={onFeature}
-          className="group flex items-center gap-2 border hairline px-8 py-4 label-mono text-[11px] text-[var(--ash)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--bone)]"
-        >
-          Play Bloom
-          <span className="text-[var(--ember)] transition-transform group-hover:translate-x-1">↗</span>
-        </button>
-      </div>
-    </header>
   );
 }
 
@@ -160,8 +115,12 @@ function WorkRow({ signal, onOpen }: { signal: CellSignal; onOpen: (s: CellSigna
           {signal.index}
         </span>
 
-        <span className="display-hero text-3xl text-[var(--bone)] transition-all duration-500 group-hover:translate-x-2 sm:text-5xl">
+        <span className="display-hero relative inline-block text-3xl text-[var(--bone)] transition-all duration-500 group-hover:translate-x-2 sm:text-5xl">
           {signal.title}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-gradient-to-r from-[var(--blood)] to-[var(--ember)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+          />
         </span>
 
         <span className="label-mono hidden text-[10px] text-[var(--ash)] sm:block">
@@ -413,9 +372,11 @@ export default function TerminalExperience() {
   }, [open]);
 
   return (
+    <GuildProvider>
     <SmoothScroll>
       <RedField />
       <div className="grain" />
+      <ScrollProgress />
 
       <Nav audioEnabled={audioEnabled} onToggleSound={toggleSound} />
 
@@ -425,15 +386,19 @@ export default function TerminalExperience() {
 
       <main className="fade relative">
         <Hero onFeature={featureBloom} />
-        <Marquee />
         <Capabilities />
+        <SignalDivider />
         <Work cells={cells} onOpen={handleOpen} />
         <Reel />
+        <FeaturedFilm />
         <Dispatch />
+        <SignalDivider />
         <Studio />
+        <SignalBoard />
         <Guild />
         <Footer />
       </main>
     </SmoothScroll>
+    </GuildProvider>
   );
 }

@@ -23,9 +23,12 @@ export const metadata: Metadata = {
     title: "Z2 — We Build Worlds",
     description: "Independent studio. Games · Sound · Film · Tools.",
     siteName: "Z2",
+    type: "website",
   },
-  icons: {
-    icon: "/icon.svg",
+  twitter: {
+    card: "summary_large_image",
+    title: "Z2 — We Build Worlds",
+    description: "Independent studio. Games · Sound · Film · Tools.",
   },
 };
 

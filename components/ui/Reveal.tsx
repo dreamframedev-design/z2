@@ -1,6 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
+import {
+  createElement,
+  useEffect,
+  useRef,
+  useState,
+  type ElementType,
+  type ReactNode,
+} from 'react';
 
 interface RevealProps {
   children: ReactNode;
@@ -45,14 +52,14 @@ export default function Reveal({
     return () => obs.disconnect();
   }, [rootMargin]);
 
-  return (
-    <Tag
-      ref={ref}
-      id={id}
-      className={`reveal ${visible ? 'is-visible' : ''} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </Tag>
+  return createElement(
+    Tag as ElementType,
+    {
+      ref,
+      id,
+      className: `reveal ${visible ? 'is-visible' : ''} ${className}`,
+      style: { transitionDelay: `${delay}ms` },
+    },
+    children
   );
 }

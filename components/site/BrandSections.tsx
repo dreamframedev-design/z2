@@ -6,27 +6,6 @@ import Reveal from '@/components/ui/Reveal';
 import { setScrollLocked } from '@/components/providers/SmoothScroll';
 import { CAPABILITIES, CLIPS, DISPATCHES, type Clip } from '@/lib/site-data';
 
-/* ----------------------------------------------------------------- MARQUEE */
-
-export function Marquee() {
-  const words = ['Games', 'Spatial Sound', 'Film', 'Instruments', 'Worlds', 'Experiments'];
-  const strip = [...words, ...words];
-  return (
-    <div className="relative overflow-hidden border-y hairline py-5">
-      <div className="marquee-track flex w-max items-center gap-10 whitespace-nowrap">
-        {strip.map((w, i) => (
-          <span key={i} className="flex items-center gap-10">
-            <span className="display-2 text-2xl text-[var(--bone)] opacity-70 sm:text-3xl">
-              {w}
-            </span>
-            <span className="text-[var(--blood)]">✳</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* ------------------------------------------------------------ CAPABILITIES */
 
 export function Capabilities() {
@@ -207,6 +186,84 @@ export function Reel() {
       <AnimatePresence>
         {active && <Lightbox clip={active} onClose={() => setActive(null)} />}
       </AnimatePresence>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------ FEATURED FILM */
+
+export function FeaturedFilm() {
+  const [play, setPlay] = useState(false);
+  const id = 'zhJwDGZ77eE';
+
+  return (
+    <section id="exos" className="border-t hairline">
+      <div className="mx-auto max-w-[1400px] px-6 py-24 sm:px-12 sm:py-32">
+        <Reveal className="mb-10 flex items-end justify-between">
+          <div>
+            <span className="label-mono text-[10px] text-[var(--blood)]">Featured Film · Chapter I</span>
+            <h2 className="display-hero mt-4 text-[clamp(2.2rem,6vw,4.5rem)] text-[var(--bone)]">
+              The <span className="font-serif-italic text-[var(--ember)]">Exos</span>
+            </h2>
+          </div>
+          <span className="label-mono hidden whitespace-nowrap text-[10px] text-[var(--ash-dim)] sm:block">
+            A Z2 original
+          </span>
+        </Reveal>
+
+        <Reveal>
+          <div className="group relative aspect-video w-full overflow-hidden border hairline bg-[var(--ink)]">
+            {play ? (
+              <iframe
+                className="absolute inset-0 h-full w-full"
+                src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`}
+                title="The Exos — Chapter I"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setPlay(true)}
+                aria-label="Play The Exos — Chapter I"
+                className="absolute inset-0 h-full w-full text-left"
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                  alt=""
+                  className="absolute inset-0 h-full w-full scale-105 object-cover opacity-60 transition-all duration-[1200ms] group-hover:scale-110 group-hover:opacity-80"
+                  draggable={false}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/50" />
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-60"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse at center, transparent 40%, rgba(255,34,64,0.12), transparent 75%)',
+                  }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="flex h-20 w-20 items-center justify-center rounded-full border border-white/40 bg-black/40 backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:border-[var(--blood)]">
+                    <span className="ml-1.5 block border-y-[11px] border-l-[18px] border-y-transparent border-l-white transition-colors group-hover:border-l-[var(--blood)]" />
+                  </span>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 sm:p-8">
+                  <div>
+                    <p className="display-2 text-xl text-white sm:text-2xl">Chapter I</p>
+                    <p className="label-mono mt-2 text-[10px] text-[var(--ash)]">
+                      Short film · The first of a series
+                    </p>
+                  </div>
+                  <span className="label-mono hidden items-center gap-2 text-[10px] text-white/70 sm:flex">
+                    Watch
+                    <span className="text-[var(--ember)]">↗</span>
+                  </span>
+                </div>
+              </button>
+            )}
+          </div>
+        </Reveal>
+      </div>
     </section>
   );
 }

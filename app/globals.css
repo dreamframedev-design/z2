@@ -213,3 +213,281 @@ body {
     rgba(6, 6, 7, 0.6) 100%
   );
 }
+
+/* ============================================================
+   Z2 HERO — cinematic title-card FX
+   The visible mark is /z2-logo.svg; these layers reuse the same
+   file as a silhouette mask so every gleam is shaped by the logo.
+   ============================================================ */
+
+/* Confine an FX layer to the exact silhouette of the mark */
+.z2-mask {
+  -webkit-mask: url(/z2-logo.svg) no-repeat center / contain;
+  mask: url(/z2-logo.svg) no-repeat center / contain;
+}
+
+/* ACT 0 — the forge ember pulsing at center before the mark arrives */
+@keyframes z2-ember {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Behind-mark halo — slow breathing, loosely synced to RedField */
+@keyframes z2-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.82;
+    transform: scale(1.07);
+  }
+}
+.z2-breathe {
+  animation: z2-breathe 7s ease-in-out infinite;
+}
+
+/* ACT 1 — one-shot specular sweep raking across the mark */
+@keyframes z2-sweep {
+  0% {
+    transform: translateX(-140%) skewX(-16deg);
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.95;
+  }
+  86% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(140%) skewX(-16deg);
+    opacity: 0;
+  }
+}
+
+/* Idle shine — a soft specular band drifts across the locked mark periodically */
+@keyframes z2-shine {
+  0% {
+    transform: translateX(-170%) skewX(-16deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.55;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(330%) skewX(-16deg);
+    opacity: 0;
+  }
+}
+
+/* Idle photon trail travelling along the slash diagonal */
+@keyframes z2-photon {
+  0% {
+    transform: translate(-70%, 70%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  64% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(70%, -70%);
+    opacity: 0;
+  }
+}
+
+/* Floating embers drifting upward (reference particles, in red) */
+@keyframes z2-spark {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: var(--spark-max, 0.5);
+  }
+  88% {
+    opacity: var(--spark-max, 0.5);
+  }
+  100% {
+    transform: translateY(-240px) scale(0.35);
+    opacity: 0;
+  }
+}
+
+/* Single flicker the instant the mark locks */
+@keyframes z2-lock {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  38% {
+    opacity: 0.68;
+  }
+  52% {
+    opacity: 1;
+  }
+  68% {
+    opacity: 0.86;
+  }
+}
+
+/* Scroll cue — a falling pulse inside the rail */
+@keyframes z2-cue {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(320%);
+    opacity: 0;
+  }
+}
+.z2-cue {
+  animation: z2-cue 2.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Signal hairline — draws across on section enter */
+@keyframes z2-signal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Boot-readout caret */
+@keyframes z2-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.z2-caret {
+  animation: z2-caret 1s steps(1) infinite;
+}
+
+/* Boot-readout typewriter — one terminal line typing in */
+@keyframes z2-type {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--tw);
+  }
+}
+.z2-typeline {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  vertical-align: bottom;
+  /* exact monospace advance so the ch-based width matches the text */
+  letter-spacing: 0;
+  border-right: 1px solid var(--ash-dim);
+  animation:
+    z2-type var(--dur, 0.6s) steps(var(--steps, 16), end) var(--delay, 0s) both,
+    z2-caret 0.85s steps(1) infinite;
+}
+
+/* Anomaly glitch — short violent jitter for the easter egg */
+@keyframes z2-glitch {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+  20% {
+    transform: translate(-3px, 1px);
+    filter: hue-rotate(-12deg) saturate(1.5);
+  }
+  40% {
+    transform: translate(3px, -2px);
+  }
+  60% {
+    transform: translate(-2px, 2px);
+    filter: contrast(1.4);
+  }
+  80% {
+    transform: translate(2px, -1px);
+  }
+}
+.z2-glitch {
+  animation: z2-glitch 0.42s steps(2) 3;
+}
+
+/* Animated, interactive wordmark — a brand spectrum flows through the letters,
+   with a specular sheen that tracks the cursor. */
+@keyframes z2-worlds-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+.z2-worlds {
+  background-image: linear-gradient(100deg, #ff5a1f, #ff2240, #ff2e6e, #ff7a34, #ff5a1f);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: z2-worlds-flow 7s linear infinite;
+}
+.z2-worlds-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at var(--mx, 50%) 45%,
+    rgba(255, 244, 232, 0.95),
+    rgba(255, 205, 170, 0.4) 16%,
+    transparent 36%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Reduced motion — kill every ambient/intro flourish, show the calm end state */
+@media (prefers-reduced-motion: reduce) {
+  .z2-worlds {
+    animation: none !important;
+  }
+  .z2-breathe,
+  .z2-cue,
+  .z2-caret,
+  .z2-glitch,
+  [data-z2-anim] {
+    animation: none !important;
+  }
+  .z2-typeline {
+    width: var(--tw) !important;
+    border-right: 0 !important;
+    animation: none !important;
+  }
+}
