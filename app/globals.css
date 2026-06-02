@@ -116,6 +116,228 @@ body {
   border-color: var(--line);
 }
 
+/* ---------------- HERO CTAS ---------------- */
+
+.z2-cta {
+  --cta-mx: 50%;
+  --cta-my: 50%;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.z2-cta__surface {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  transform-origin: center;
+  transition:
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-position 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 260ms ease,
+    box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.z2-cta__surface::before,
+.z2-cta__surface::after {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.z2-cta__content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  transform-origin: center;
+  transition:
+    color 260ms ease,
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.z2-cta:focus-visible {
+  outline: 1px solid rgba(236, 234, 230, 0.86);
+  outline-offset: 4px;
+}
+
+.z2-cta--primary .z2-cta__surface {
+  background: linear-gradient(108deg, var(--blood) 0%, #ff3038 48%, var(--ember) 112%);
+  background-position: 0% 50%;
+  background-size: 165% 100%;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 8px 24px rgba(255, 34, 64, 0.08);
+}
+
+.z2-cta--primary .z2-cta__surface::before {
+  background: radial-gradient(
+    82px circle at var(--cta-mx) var(--cta-my),
+    rgba(255, 244, 232, 0.42),
+    rgba(255, 190, 148, 0.14) 38%,
+    transparent 74%
+  );
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.z2-cta--primary .z2-cta__surface::after {
+  background: linear-gradient(
+    108deg,
+    transparent 30%,
+    rgba(255, 248, 238, 0.24) 49%,
+    transparent 68%
+  );
+  transform: translateX(-150%);
+}
+
+.z2-cta--primary:hover .z2-cta__surface {
+  background-position: 100% 50%;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 12px 30px rgba(255, 34, 64, 0.22),
+    0 0 24px rgba(255, 34, 64, 0.18);
+}
+
+.z2-cta--primary[data-cta-interactive]:hover .z2-cta__surface::before {
+  opacity: 1;
+}
+
+.z2-cta--primary[data-cta-interactive]:hover .z2-cta__surface::after {
+  animation: z2-cta-sweep 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.z2-cta--secondary {
+  border: 1px solid transparent;
+  transition: color 260ms ease;
+}
+
+.z2-cta--secondary .z2-cta__content {
+  gap: 0.5rem;
+}
+
+.z2-cta--secondary .z2-cta__surface {
+  inset: -1px;
+  border: 1px solid var(--line);
+  background: rgba(16, 16, 18, 0.22);
+}
+
+.z2-cta--secondary .z2-cta__surface::before {
+  background: radial-gradient(
+    92px circle at var(--cta-mx) var(--cta-my),
+    rgba(236, 234, 230, 0.09),
+    rgba(255, 90, 31, 0.035) 46%,
+    transparent 78%
+  );
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.z2-cta--secondary .z2-cta__surface::after {
+  padding: 1px;
+  background: radial-gradient(
+    82px circle at var(--cta-mx) var(--cta-my),
+    rgba(255, 90, 31, 0.78),
+    rgba(236, 234, 230, 0.22) 40%,
+    transparent 78%
+  );
+  opacity: 0;
+  transition: opacity 240ms ease;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.z2-cta--secondary:hover {
+  color: var(--bone);
+}
+
+.z2-cta--secondary:hover .z2-cta__surface {
+  border-color: var(--line-strong);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.2),
+    0 0 16px rgba(255, 90, 31, 0.045);
+}
+
+.z2-cta--secondary[data-cta-interactive]:hover .z2-cta__surface::before,
+.z2-cta--secondary[data-cta-interactive]:hover .z2-cta__surface::after {
+  opacity: 1;
+}
+
+.z2-cta__arrow {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  color: var(--ember);
+  line-height: 1;
+}
+
+.z2-cta__arrow::before,
+.z2-cta__arrow::after {
+  position: absolute;
+  inset: 0;
+  content: "\2197";
+  transition:
+    opacity 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.z2-cta__arrow::after {
+  opacity: 0;
+  transform: translate(-45%, 45%);
+}
+
+.z2-cta--secondary:hover .z2-cta__arrow::before {
+  opacity: 0;
+  transform: translate(45%, -45%);
+}
+
+.z2-cta--secondary:hover .z2-cta__arrow::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.z2-cta[data-cta-interactive]:hover .z2-cta__surface,
+.z2-cta[data-cta-interactive]:hover .z2-cta__content {
+  transform: translateY(-2px) scale(1.012);
+}
+
+.z2-cta--secondary[data-cta-interactive]:hover .z2-cta__surface,
+.z2-cta--secondary[data-cta-interactive]:hover .z2-cta__content {
+  transform: translateY(-1px) scale(1.008);
+}
+
+.z2-cta[data-cta-interactive]:active .z2-cta__surface,
+.z2-cta[data-cta-interactive]:active .z2-cta__content {
+  transform: translateY(0) scale(0.982);
+  transition-duration: 110ms;
+}
+
+@keyframes z2-cta-sweep {
+  from {
+    transform: translateX(-150%);
+  }
+  to {
+    transform: translateX(150%);
+  }
+}
+
 /* ---------------- MOTION ---------------- */
 
 @keyframes rise {
@@ -475,6 +697,15 @@ body {
 
 /* Reduced motion — kill every ambient/intro flourish, show the calm end state */
 @media (prefers-reduced-motion: reduce) {
+  .z2-cta__surface,
+  .z2-cta__content,
+  .z2-cta__arrow::before,
+  .z2-cta__arrow::after {
+    transition-duration: 0.01ms !important;
+  }
+  .z2-cta__surface::after {
+    animation: none !important;
+  }
   .z2-worlds {
     animation: none !important;
   }

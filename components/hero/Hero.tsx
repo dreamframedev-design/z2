@@ -391,25 +391,27 @@ export default function Hero({ onFeature }: { onFeature: () => void }) {
 
         {/* ---- CTAs ---- */}
         <motion.div
-          className="mt-12 flex flex-col items-center gap-4 sm:flex-row"
+          className="mt-12 flex flex-col items-center gap-6 sm:flex-row sm:gap-8"
           {...reveal(LOCK + 0.46)}
         >
           <MagneticButton
             href="#work"
             magnetic={interactive}
-            className="group relative overflow-hidden bg-[var(--blood)] px-8 py-4 label-mono text-[11px] text-[var(--bone)] transition-colors hover:bg-[var(--ember)]"
+            variant="primary"
+            className="group px-8 py-4 label-mono text-[11px] text-[var(--bone)]"
           >
-            <span className="relative z-10">Enter the work</span>
+            Enter the work
           </MagneticButton>
 
           <MagneticButton
             magnetic={interactive}
             onClick={onFeature}
             strength={0.24}
-            className="group flex items-center gap-2 border hairline px-8 py-4 label-mono text-[11px] text-[var(--ash)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--bone)]"
+            variant="secondary"
+            className="group gap-2 px-8 py-4 label-mono text-[11px] text-[var(--ash)]"
           >
             Play Bloom
-            <span className="text-[var(--ember)] transition-transform group-hover:translate-x-1">↗</span>
+            <span className="z2-cta__arrow" aria-hidden="true" />
           </MagneticButton>
         </motion.div>
       </motion.div>
