@@ -5,15 +5,19 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ElementType,
   type ReactNode,
 } from 'react';
+
+type RevealVariant = 'lift' | 'capability-left' | 'capability-right';
 
 interface RevealProps {
   children: ReactNode;
   as?: ElementType;
   delay?: number;
   className?: string;
+  variant?: RevealVariant;
   /** start revealing this many px before fully in view */
   rootMargin?: string;
   id?: string;
@@ -24,6 +28,7 @@ export default function Reveal({
   as: Tag = 'div',
   delay = 0,
   className = '',
+  variant = 'lift',
   rootMargin = '-12% 0px',
   id,
 }: RevealProps) {
@@ -57,8 +62,11 @@ export default function Reveal({
     {
       ref,
       id,
-      className: `reveal ${visible ? 'is-visible' : ''} ${className}`,
-      style: { transitionDelay: `${delay}ms` },
+      className: `reveal reveal--${variant} ${visible ? 'is-visible' : ''} ${className}`,
+      style: {
+        '--reveal-delay': `${delay}ms`,
+        transitionDelay: `${delay}ms`,
+      } as CSSProperties,
     },
     children
   );

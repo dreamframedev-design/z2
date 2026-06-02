@@ -24,7 +24,8 @@ export function Capabilities() {
         {CAPABILITIES.map((cap, i) => (
           <Reveal
             key={cap.id}
-            delay={i * 80}
+            delay={i * 250}
+            variant={i % 2 === 0 ? 'capability-left' : 'capability-right'}
             className="group relative bg-[var(--void)] p-8 transition-colors duration-500 hover:bg-[var(--surface)] sm:p-12"
           >
             <div className="flex items-baseline gap-4">
@@ -291,7 +292,7 @@ export function Dispatch() {
 
         <div className="border-t hairline">
           {DISPATCHES.map((d, i) => (
-            <Reveal key={d.id} delay={i * 70}>
+            <Reveal key={d.id} delay={i * 45}>
               <a
                 href="#connect"
                 className="group grid grid-cols-1 items-baseline gap-3 border-b hairline py-7 transition-colors sm:grid-cols-[7rem_8rem_1fr_2rem] sm:gap-6"
