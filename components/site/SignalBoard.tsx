@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import Reveal from '@/components/ui/Reveal';
-import { supabase } from '@/lib/supabase/client';
+import { getSupabase, isSupabaseConfigured } from '@/lib/supabase/client';
 import { useGuild } from '@/components/providers/GuildProvider';
 
 interface Idea {
@@ -103,6 +103,11 @@ function SubmitForm({ userId, onDone }: { userId: string; onDone: () => void }) 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (title.trim().length < 3) return;
+    const supabase = getSupabase();
+    if (!supabase) {
+      setErr('Supabase is not configured');
+      return;
+    }
     setBusy(true);
     setErr(null);
     const { error } = await supabase
@@ -222,6 +227,12 @@ export default function SignalBoard() {
   const reloadTimer = useRef<number | undefined>(undefined);
 
   const load = useCallback(async () => {
+    const supabase = getSupabase();
+    if (!supabase) {
+      setStatus('setup');
+      return;
+    }
+
     const { data, error } = await supabase
       .from('idea_scores')
       .select('*')
@@ -254,6 +265,9 @@ export default function SignalBoard() {
   // Lights up once the tables are in the supabase_realtime publication
   // (see supabase/schema.sql). Harmless if not yet enabled.
   useEffect(() => {
+    const supabase = getSupabase();
+    if (!supabase) return;
+
     const reloadSoon = () => {
       window.clearTimeout(reloadTimer.current);
       reloadTimer.current = window.setTimeout(() => load(), 350);
@@ -270,6 +284,9 @@ export default function SignalBoard() {
   }, [load]);
 
   const toggleVote = async (idea: Idea) => {
+    const supabase = getSupabase();
+    if (!supabase) return;
+
     if (!user) {
       document.getElementById('guild-auth')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -355,9 +372,20 @@ export default function SignalBoard() {
             <div className="border hairline bg-[var(--surface)] p-8 sm:p-10">
               <p className="label-mono text-[10px] text-[var(--ember)]">Board offline</p>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-[var(--ash)]">
-                Wired to Supabase, but the tables aren&apos;t live yet. Run{' '}
-                <span className="mono text-[var(--bone)]">supabase/schema.sql</span> in your Supabase
-                SQL editor to ignite it — seeded signals appear here instantly.
+                {!isSupabaseConfigured ? (
+                  <>
+                    Supabase isn&apos;t wired yet. Add{' '}
+                    <span className="mono text-[var(--bone)]">NEXT_PUBLIC_SUPABASE_URL</span> and{' '}
+                    <span className="mono text-[var(--bone)]">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>{' '}
+                    to Vercel project settings, then redeploy.
+                  </>
+                ) : (
+                  <>
+                    Wired to Supabase, but the tables aren&apos;t live yet. Run{' '}
+                    <span className="mono text-[var(--bone)]">supabase/schema.sql</span> in your Supabase
+                    SQL editor to ignite it — seeded signals appear here instantly.
+                  </>
+                )}
               </p>
             </div>
           )}

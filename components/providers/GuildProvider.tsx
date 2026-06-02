@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/client';
+import { getSupabase } from '@/lib/supabase/client';
 
 interface GuildContextValue {
   session: Session | null;
@@ -30,6 +30,12 @@ export function GuildProvider({ children }: { children: ReactNode }) {
   const [operators, setOperators] = useState(1);
 
   useEffect(() => {
+    const supabase = getSupabase();
+    if (!supabase) {
+      setReady(true);
+      return;
+    }
+
     let alive = true;
     supabase.auth.getSession().then(({ data }) => {
       if (!alive) return;
@@ -48,6 +54,9 @@ export function GuildProvider({ children }: { children: ReactNode }) {
   // Live presence — count operators currently in the guild. Ephemeral (no DB),
   // works immediately with the anon key.
   useEffect(() => {
+    const supabase = getSupabase();
+    if (!supabase) return;
+
     const key =
       typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `op-${Date.now()}`;
     const channel = supabase.channel('guild-presence', { config: { presence: { key } } });
@@ -64,6 +73,9 @@ export function GuildProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInDiscord = useCallback(async () => {
+    const supabase = getSupabase();
+    if (!supabase) return { error: 'Supabase is not configured' };
+
     const redirectTo = typeof window !== 'undefined' ? window.location.origin : undefined;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
@@ -73,6 +85,9 @@ export function GuildProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInEmail = useCallback(async (email: string) => {
+    const supabase = getSupabase();
+    if (!supabase) return { error: 'Supabase is not configured' };
+
     const emailRedirectTo = typeof window !== 'undefined' ? window.location.origin : undefined;
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -82,6 +97,8 @@ export function GuildProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
+    const supabase = getSupabase();
+    if (!supabase) return;
     await supabase.auth.signOut();
   }, []);
 

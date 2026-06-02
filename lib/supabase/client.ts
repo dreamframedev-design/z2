@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * Browser/public Supabase client (publishable key — safe client-side).
@@ -8,18 +8,24 @@ import { createClient } from '@supabase/supabase-js';
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!url || !anonKey) {
-  // Surfaced clearly in dev rather than failing cryptically deep in a call.
-  console.warn('[z2] Supabase env missing — set NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local');
-}
+export const isSupabaseConfigured = Boolean(url && anonKey);
 
-export const supabase = createClient(url ?? '', anonKey ?? '', {
-  auth: {
-    // implicit flow returns the session in the URL hash on redirect, so OAuth +
-    // magic-link both work in this client-only app with no server callback route.
-    flowType: 'implicit',
-    detectSessionInUrl: true,
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+let client: SupabaseClient | null = null;
+
+/** Lazily create the client so builds/prerender don't crash when env is unset. */
+export function getSupabase(): SupabaseClient | null {
+  if (!isSupabaseConfigured) return null;
+  if (!client) {
+    client = createClient(url!, anonKey!, {
+      auth: {
+        // implicit flow returns the session in the URL hash on redirect, so OAuth +
+        // magic-link both work in this client-only app with no server callback route.
+        flowType: 'implicit',
+        detectSessionInUrl: true,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    });
+  }
+  return client;
+}
